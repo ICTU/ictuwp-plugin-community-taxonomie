@@ -1,0 +1,14 @@
+{
+  "name": "ictu/ictuwp-plugin-community-taxonomie",
+  "type": "wordpress-plugin",
+  "license": "GPL-3.0",
+  "description": "Voegt extra taxonomie toe: 'community'",
+  "homepage": "https://www.gebruikercentraal.nl",
+  "authors": [
+    {
+      "name": "David Hund",
+      "email": "david.hund@ictu.nl",
+      "homepage": "https://github.com/ICTU/ictuwp-plugin-community-taxonomie"
+    }
+  ]
+}
