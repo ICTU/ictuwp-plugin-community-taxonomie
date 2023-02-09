@@ -9,15 +9,15 @@
  * @see https://developer.wordpress.org/reference/functions/get_taxonomy_labels/
  *
  * CONTENTS:
- * - Set TAX_COMMUNITY taxonomy labels
- * - Set TAX_COMMUNITY taxonomy arguments
- * - Register TAX_COMMUNITY taxonomy
+ * - Set GC_COMMUNITY_TAX taxonomy labels
+ * - Set GC_COMMUNITY_TAX taxonomy arguments
+ * - Register GC_COMMUNITY_TAX taxonomy
  * - public function fn_ictu_community_get_post_community_terms() - Retreive Community terms with custom field data for Post
  * ----------------------------------------------------- */
 
 
 
-if ( ! taxonomy_exists( TAX_COMMUNITY ) ) {
+if ( ! taxonomy_exists( GC_COMMUNITY_TAX ) ) {
 
 	// [1] Community Taxonomy Labels
 	$community_tax_labels = [
@@ -48,7 +48,7 @@ if ( ! taxonomy_exists( TAX_COMMUNITY ) ) {
 	];
 
 	// [2] Community Taxonomy Arguments
-	$community_slug = TAX_COMMUNITY;
+	$community_slug = GC_COMMUNITY_TAX;
 	// TODO: discuss if slug should be set to a page with the overview template
 	// like so:
 	// $community_slug = fn_ictu_community_get_community_overview_page();
@@ -90,9 +90,9 @@ if ( ! taxonomy_exists( TAX_COMMUNITY ) ) {
 	$post_types_with_community = array_filter( $post_types_with_community, 'post_type_exists' );
 
 	// [3] Register our Custom Taxonomy
-	register_taxonomy( TAX_COMMUNITY, $post_types_with_community, $community_tax_args );
+	register_taxonomy( GC_COMMUNITY_TAX, $post_types_with_community, $community_tax_args );
 
-} // if ( ! taxonomy_exists( TAX_COMMUNITY ) )
+} // if ( ! taxonomy_exists( GC_COMMUNITY_TAX ) )
 
 
 /**
@@ -121,7 +121,7 @@ function fn_ictu_community_get_community_terms( $community_name = null, $term_ar
 
 	// TODO: I foresee that editors will want to have a custom order to the taxonomy terms
 	// but for now the terms are ordered alphabetically
-	$community_taxonomy = TAX_COMMUNITY;
+	$community_taxonomy = GC_COMMUNITY_TAX;
 	$community_terms    = [];
 	$community_query    = is_array( $term_args ) ? $term_args : [
 		'taxonomy'   => $community_taxonomy,
@@ -175,8 +175,8 @@ function fn_ictu_community_get_post_community_terms( $post_id = null, $term_numb
 		return $return_terms;
 	}
 
-	$post_community_terms = wp_get_post_terms( $post_id, TAX_COMMUNITY, [
-		'taxonomy'   => TAX_COMMUNITY,
+	$post_community_terms = wp_get_post_terms( $post_id, GC_COMMUNITY_TAX, [
+		'taxonomy'   => GC_COMMUNITY_TAX,
 		'number'     => $term_number, // Return max $term_number Terms
 		'hide_empty' => true,
 		'parent'     => 0,
