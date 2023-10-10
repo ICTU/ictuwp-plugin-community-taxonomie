@@ -144,8 +144,11 @@ function fn_ictu_community_get_community_terms( $community_name = null, $term_ar
 		// Add our custom Fields to each found WP_Term instance
 		// And add to $community_terms[]
 		foreach ( $found_community_terms as $community_term ) {
-			foreach ( get_fields( $community_term ) as $key => $val ) {
-				$community_term->$key = $val;
+			$community_term_fields = get_fields( $community_term );
+			if ( is_array( $community_term_fields ) ) {
+				foreach ( $community_term_fields as $key => $val ) {
+					$community_term->$key = $val;
+				}
 			}
 			$community_terms[] = $community_term;
 		}

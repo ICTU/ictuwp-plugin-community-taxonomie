@@ -106,6 +106,9 @@ if ( ! class_exists( 'ICTU_GC_community_taxonomy' ) ) :
 
 			require_once plugin_dir_path( __FILE__ ) . 'includes/community-taxonomy.php';
 
+			// Require all needed ACF fieldgroup fields
+			require_once( 'includes/community_taxonomy_acf_fields.php' );
+
 		}
 
 
