@@ -41,10 +41,20 @@ if ( function_exists( 'fn_ictu_community_get_community_terms' ) ) {
 			'url'   => $term_url
 		);
 
-		if ( $community->community_taxonomy_image ) {
-			$item['img'] = '<img src="' . $community->community_taxonomy_image['sizes']['image-16x9'] . '" alt=""/>';
+		// if ( $community->community_taxonomy_image ) {
+		// 	$item['img'] = '<img src="' . $community->community_taxonomy_image['sizes']['image-16x9'] . '" alt=""/>';
+		// }
+		if ( $community->community_taxonomy_link ) {
+			$item['url'] = $community->community_taxonomy_link['url'];
+		}
+		if ( $community->community_taxonomy_visual ) {
+			$item['img'] = $community->community_taxonomy_visual;
+		}
+		if ( $community->community_taxonomy_colorscheme ) {
+			$item['scheme'] = $community->community_taxonomy_colorscheme;
 		}
 
+		
 		$context['overview']['items'][] = $item;
 
 	}

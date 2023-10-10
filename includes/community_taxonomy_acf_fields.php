@@ -31,7 +31,7 @@ if ( ! function_exists( 'acf_add_local_field_group' ) ) {
 // Available Taxonomy visuals
 // ----------------------------
 // Base path for existing community taxonomy visuals
-$VISUALS_BASE_IMG = '<img src="/wp-content/plugins/ictuwp-plugin-community-taxonomie/assets/images/%s" width="75" height="50" class="community-taxonomy-visual" alt="" />%s';
+$VISUALS_BASE_IMG = '<img src="' . GC_COMMUNITY_TAX_VISUALS_PATH . '/%s" width="75" height="50" class="community-taxonomy-visual" alt="" />%s';
 
 $visuals = array(
 	'c-default.svg' => 'Standaard',

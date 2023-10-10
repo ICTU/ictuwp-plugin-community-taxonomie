@@ -147,6 +147,16 @@ function fn_ictu_community_get_community_terms( $community_name = null, $term_ar
 			$community_term_fields = get_fields( $community_term );
 			if ( is_array( $community_term_fields ) ) {
 				foreach ( $community_term_fields as $key => $val ) {
+
+					// Add path to image url
+					if( $key == 'community_taxonomy_visual' && defined( 'GC_COMMUNITY_TAX_VISUALS_PATH' ) ) {
+						$val = sprintf(
+							'<img width="800" height="450" src="%s/%s" class="community-taxonomy-visual" alt="" decoding="async" loading="lazy" />',
+							GC_COMMUNITY_TAX_VISUALS_PATH,
+							$val
+						);
+					}
+
 					$community_term->$key = $val;
 				}
 			}

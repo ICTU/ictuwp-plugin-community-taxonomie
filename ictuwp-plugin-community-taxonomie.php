@@ -36,7 +36,7 @@ if ( get_bloginfo( 'language' ) !== 'nl-NL' ) {
 defined( 'GC_COMMUNITY_TAX' ) or define( 'GC_COMMUNITY_TAX', $slug );
 defined( 'GC_COMMUNITY_TAX_OVERVIEW_TEMPLATE' ) or define( 'GC_COMMUNITY_TAX_OVERVIEW_TEMPLATE', 'template-overview-communities.php' );
 defined( 'GC_COMMUNITY_TAX_DETAIL_TEMPLATE' ) or define( 'GC_COMMUNITY_TAX_DETAIL_TEMPLATE', 'template-detail-communities.php' );
-
+defined( 'GC_COMMUNITY_TAX_VISUALS_PATH' ) or define( 'GC_COMMUNITY_TAX_VISUALS_PATH' , '/wp-content/plugins/ictuwp-plugin-community-taxonomie/assets/images' );
 //========================================================================================================
 // only this plugin should activate the GC_COMMUNITY_TAX taxonomy
 if ( ! taxonomy_exists( GC_COMMUNITY_TAX ) ) {
