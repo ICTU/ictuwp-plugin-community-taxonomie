@@ -106,6 +106,8 @@ if ( ! class_exists( 'ICTU_GC_community_taxonomy' ) ) :
 
 			require_once plugin_dir_path( __FILE__ ) . 'includes/community-taxonomy.php';
 
+			require_once plugin_dir_path( __FILE__ ) . 'includes/community-taxonomy-page-acf-fields.php';
+
 		}
 
 
@@ -287,8 +289,8 @@ if ( defined( GC_COMMUNITY_TAX ) or taxonomy_exists( GC_COMMUNITY_TAX ) ) {
 function fn_ictu_community_add_templates() {
 
 	$return_array = array(
-		GC_COMMUNITY_TAX_OVERVIEW_TEMPLATE => _x( 'Community / overzicht', 'label page template', 'gctheme' ),
-		GC_COMMUNITY_TAX_DETAIL_TEMPLATE   => _x( 'Community / detailpagina', 'label page template', 'gctheme' )
+		GC_COMMUNITY_TAX_OVERVIEW_TEMPLATE => _x( '[Community] overzicht', 'label page template', 'gctheme' ),
+		GC_COMMUNITY_TAX_DETAIL_TEMPLATE   => _x( '[Community] detailpagina', 'label page template', 'gctheme' )
 	);
 
 	return $return_array;
