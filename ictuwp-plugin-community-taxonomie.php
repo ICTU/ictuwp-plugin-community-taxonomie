@@ -172,10 +172,33 @@ if ( ! class_exists( 'ICTU_GC_community_taxonomy' ) ) :
 		 *
 		 */
 		public function fn_ictu_community_yoast_filter_breadcrumb( $links ) {
+			global $post;
 
-			if ( is_tax( GC_COMMUNITY_TAX ) ) {
-				// this filter is only for terms in GC_COMMUNITY_TAX taxonomy
+			if ( $post && is_page() ) {
 
+				// Currently Querying a Page
+				// Try and see if it has the GC_COMMUNITY_TAX_DETAIL_TEMPLATE template
+				// and if so, append the Community Overview Page to the breadcrumb
+				$page_template = get_post_meta( $post->ID, '_wp_page_template', true );
+				if ( $page_template && $page_template === GC_COMMUNITY_TAX_DETAIL_TEMPLATE ) {
+
+					// Get the Community Overview Page to append to our breadcrumb
+					$community_overview_page_id = $this->fn_ictu_community_get_community_overview_page();
+
+					if ( $community_overview_page_id ) {
+						// Use this page as GC_COMMUNITY_TAX term parent in the breadcrumb
+						$taxonomy_link = array(
+							'url'  => get_permalink( $community_overview_page_id ),
+							'text' => get_the_title( $community_overview_page_id )
+						);
+						array_splice( $links, -1, 0, [$taxonomy_link] );
+					}
+
+				}
+
+			} elseif ( is_tax( GC_COMMUNITY_TAX ) ) {
+
+				// NOT currently Querying a Page, but a GC_COMMUNITY_TAX term
 				$term = get_queried_object();
 				// Append taxonomy if 1st-level child term only
 				// old: Home > Term
@@ -211,6 +234,7 @@ if ( ! class_exists( 'ICTU_GC_community_taxonomy' ) ) :
 						// array_splice( $links, -1, 0, [$taxonomy_link] );
 					}
 				}
+
 			}
 
 			return $links;
