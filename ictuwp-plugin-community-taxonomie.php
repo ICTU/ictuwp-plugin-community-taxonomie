@@ -179,13 +179,16 @@ if ( ! class_exists( 'ICTU_GC_community_taxonomy' ) ) :
 				// Currently Querying a Page
 				// Try and see if it has the GC_COMMUNITY_TAX_DETAIL_TEMPLATE template
 				// and if so, append the Community Overview Page to the breadcrumb
+				// But only if the current page is not a childpage of the parent...
 				$page_template = get_post_meta( $post->ID, '_wp_page_template', true );
 				if ( $page_template && $page_template === GC_COMMUNITY_TAX_DETAIL_TEMPLATE ) {
 
 					// Get the Community Overview Page to append to our breadcrumb
 					$community_overview_page_id = $this->fn_ictu_community_get_community_overview_page();
 
-					if ( $community_overview_page_id ) {
+					if ( $community_overview_page_id && $community_overview_page_id !== $post->post_parent ) {
+						// We have a Overview-page ID
+						// and it is not the parent of the current page
 						// Use this page as GC_COMMUNITY_TAX term parent in the breadcrumb
 						$taxonomy_link = array(
 							'url'  => get_permalink( $community_overview_page_id ),
