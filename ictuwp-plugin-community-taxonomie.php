@@ -123,7 +123,7 @@ if ( ! class_exists( 'ICTU_GC_community_taxonomy' ) ) :
 
 			// Get global post
 			global $post;
-			$file        = '';
+			$file       = '';
 			$pluginpath = plugin_dir_path( __FILE__ );
 
 
@@ -180,24 +180,35 @@ if ( ! class_exists( 'ICTU_GC_community_taxonomy' ) ) :
 				// Try and see if it has the GC_COMMUNITY_TAX_DETAIL_TEMPLATE template
 				// and if so, append the Community Overview Page to the breadcrumb
 				// But only if the current page is not a childpage of the parent...
-				$page_template = get_post_meta( $post->ID, '_wp_page_template', true );
-				if ( $page_template && $page_template === GC_COMMUNITY_TAX_DETAIL_TEMPLATE ) {
+				if (  $post->post_parent !== 0 ) {
+					// page does have a parent, whatever parent it might be, so:
+					// do nothing extra for breadcrumb
 
-					// Get the Community Overview Page to append to our breadcrumb
-					$community_overview_page_id = $this->fn_ictu_community_get_community_overview_page();
+				} else {
+					// page does NOT have a parent, so let's add the GC_COMMUNITY_TAX_DETAIL_TEMPLATE to
+					$page_template = get_post_meta( $post->ID, '_wp_page_template', true );
 
-					if ( $community_overview_page_id && $community_overview_page_id !== $post->post_parent ) {
-						// We have a Overview-page ID
-						// and it is not the parent of the current page
-						// Use this page as GC_COMMUNITY_TAX term parent in the breadcrumb
-						$taxonomy_link = array(
-							'url'  => get_permalink( $community_overview_page_id ),
-							'text' => get_the_title( $community_overview_page_id )
-						);
-						array_splice( $links, -1, 0, [$taxonomy_link] );
+					if ( $page_template && $page_template === GC_COMMUNITY_TAX_DETAIL_TEMPLATE ) {
+						// current page has template = GC_COMMUNITY_TAX_DETAIL_TEMPLATE
+
+						// Get the Community Overview Page to append to our breadcrumb
+						$community_overview_page_id = $this->fn_ictu_community_get_community_overview_page();
+
+						if ( $community_overview_page_id ) {
+							// We have a Overview-page ID
+							// and it is not the parent of the current page
+							// Use this page as GC_COMMUNITY_TAX term parent in the breadcrumb
+							$taxonomy_link = array(
+								'url'  => get_permalink( $community_overview_page_id ),
+								'text' => get_the_title( $community_overview_page_id )
+							);
+							array_splice( $links, - 1, 0, [ $taxonomy_link ] );
+						}
+
 					}
 
 				}
+
 
 			} elseif ( is_tax( GC_COMMUNITY_TAX ) ) {
 
@@ -272,7 +283,7 @@ if ( ! class_exists( 'ICTU_GC_community_taxonomy' ) ) :
 				'meta_key'    => '_wp_page_template',
 				'meta_value'  => GC_COMMUNITY_TAX_OVERVIEW_TEMPLATE
 			);
-			$overview_page = get_pages( $page_template_query_args );
+			$overview_page            = get_pages( $page_template_query_args );
 
 			if ( $overview_page && isset( $overview_page[0]->ID ) ) {
 				$return = $overview_page[0]->ID;
