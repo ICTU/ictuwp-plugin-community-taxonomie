@@ -41,10 +41,23 @@ if ( function_exists( 'fn_ictu_community_get_community_terms' ) ) {
 			'url'   => $term_url
 		);
 
+		// FIXME: community_taxonomy_image does not yet exist?
+		// It should probably take the `featured_image` of the `community_taxonomy_page`?
 		if ( $community->community_taxonomy_image ) {
 			$item['img'] = '<img src="' . $community->community_taxonomy_image['sizes']['image-16x9'] . '" alt=""/>';
 		}
 
+		if ( $community->community_taxonomy_visual ) {
+			$item['visual'] = $community->community_taxonomy_visual;
+		}
+		if ( $community->community_taxonomy_colorscheme ) {
+			$item['scheme'] = $community->community_taxonomy_colorscheme;
+		}
+		if ( $community->community_taxonomy_link ) {
+			$item['url'] = $community->community_taxonomy_link['url'];
+		}
+
+		
 		$context['overview']['items'][] = $item;
 
 	}

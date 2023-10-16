@@ -8,8 +8,8 @@
  * Plugin Name:         ICTU / Gebruiker Centraal / Community taxonomie
  * Plugin URI:          https://github.com/ICTU/ictuwp-plugin-community-taxonomie
  * Description:         Plugin voor het aanmaken van de 'community'-taxonomie
- * Version:             1.0.1
- * Version description: Rename constants to be consistent with GC
+ * Version:             1.1.0
+ * Version description: Add extra ACF fields: Colorscheme, Visual & Link
  * Author:              David Hund
  * Author URI:          https://github.com/ICTU/ictuwp-plugin-community-taxonomie/
  * License:             GPL-3.0+
@@ -36,7 +36,7 @@ if ( get_bloginfo( 'language' ) !== 'nl-NL' ) {
 defined( 'GC_COMMUNITY_TAX' ) or define( 'GC_COMMUNITY_TAX', $slug );
 defined( 'GC_COMMUNITY_TAX_OVERVIEW_TEMPLATE' ) or define( 'GC_COMMUNITY_TAX_OVERVIEW_TEMPLATE', 'template-overview-communities.php' );
 defined( 'GC_COMMUNITY_TAX_DETAIL_TEMPLATE' ) or define( 'GC_COMMUNITY_TAX_DETAIL_TEMPLATE', 'template-detail-communities.php' );
-
+defined( 'GC_COMMUNITY_TAX_VISUALS_PATH' ) or define( 'GC_COMMUNITY_TAX_VISUALS_PATH' , '/wp-content/plugins/ictuwp-plugin-community-taxonomie/assets/images' );
 //========================================================================================================
 // only this plugin should activate the GC_COMMUNITY_TAX taxonomy
 if ( ! taxonomy_exists( GC_COMMUNITY_TAX ) ) {
@@ -105,6 +105,9 @@ if ( ! class_exists( 'ICTU_GC_community_taxonomy' ) ) :
 		public function fn_ictu_community_register_taxonomy() {
 
 			require_once plugin_dir_path( __FILE__ ) . 'includes/community-taxonomy.php';
+
+			// Require all needed ACF fieldgroup fields
+			require_once plugin_dir_path( __FILE__ ) . 'includes/community-taxonomy-acf-fields.php';
 
 		}
 
