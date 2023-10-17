@@ -77,7 +77,7 @@ $color_themes = array(
 if ( function_exists( 'gc_get_colorschemes' ) ) {
 	$available_color_themes = gc_get_colorschemes();
 	foreach ( $available_color_themes as $key => $val ) {
-		$color_themes[ $key ] = '<span class="swatch swatch--' . $key . '">' . $val['name'] . '</span>';
+		$color_themes[ $key ] = '<span class="swatch swatch--' . $key . '">' . $val['name'] . ' ' . _x( 'Kleurenschema', 'Community taxonomy ACF field definition', 'gctheme' ) . '</span>';
 	}
 
 	// hardcode
