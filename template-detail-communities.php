@@ -91,8 +91,7 @@ if ( $current_community_term && ! is_wp_error( $current_community_term ) ) {
 		// If we have an extra Community Link
 		// we redirect to that URL instead of loading our detail template
 		if ( isset( $current_community_term_fields['community_taxonomy_link'] ) ) {
-			wp_redirect( $current_community_term_fields['community_taxonomy_link']['url'] );
-			exit;
+			$context['community_link'] = $current_community_term_fields['community_taxonomy_link'];
 		}
 	}
 
