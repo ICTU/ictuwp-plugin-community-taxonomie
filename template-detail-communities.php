@@ -129,34 +129,79 @@ if ( $current_community_term && ! is_wp_error( $current_community_term ) ) {
 	/**
 	 *  Events box
 	 * ----------------------------- */
-	 // Only show events if Events Manager plugin is active
+	// Only show events if Events Manager plugin is active
 	if ( class_exists( 'EM_Events' ) ) {
+		// the events manager is active, which helps for selecting events
 
-		// // TEST: render block pattern
-		// // Challenge: how to fill in custom data?
-		// $agenda_pattern_name = 'gc/section-agenda';
+		$metabox_fields = get_field( 'events' );
 
-		// if ( class_exists( 'WP_Block_Patterns_Registry' ) ) {
+		if ( $metabox_fields && 'ja' === $metabox_fields['metabox_events_show_or_not'] ) {
 
-		// 	$block_pattern_registry = WP_Block_Patterns_Registry::get_instance();
+			$maxnr         = $metabox_fields['metabox_events_max_nr'] ?? 3;
+			$metabox_items = array();
 
-		// 	if ( $block_pattern_registry ) {
-		// 		$agenda_section_pattern = $block_pattern_registry->get_registered( $agenda_pattern_name );
-		// 		if ( $agenda_section_pattern ) {
-		// 			// Add our pattern HTML to our metabox_content context
-		// 			$context['metabox_content'] = ( $context['metabox_content'] ?? '' ) . do_blocks( $agenda_section_pattern['content'] );
+			// select latest events for $current_thema_taxid
+			// _event_start_date is a meta field for the events post type
+			// this query selects future events for the $current_thema_taxid
+			$currentdate = date( "Y-m-d" );
+			$args        = array(
+				'posts_per_page' => $maxnr,
+				'post_type'      => EM_POST_TYPE_EVENT,
+				'meta_key'       => '_event_start_date',
+				'orderby'        => 'meta_value_num',
+				'post_status'    => 'publish',
+				'order'          => 'ASC', // order by start date ascending
+				'fields'         => 'ids', // only return IDs
+				'tax_query'      => array(
+					array(
+						'taxonomy' => GC_COMMUNITY_TAX,
+						'field'    => 'term_id',
+						'terms'    => $current_community_term->term_id,
+					)
+				),
+				'meta_query'     => array(
+					array(
+						'key'     => '_event_start_date',
+						'value'   => $currentdate,
+						'compare' => '>=',
+						'type'    => 'DATE',
+					),
+				)
+			);
+			$query_items = new WP_Query( $args );
 
-		// 			// dump(
-		// 			// 	$agenda_section_pattern
-		// 			// 	// do_blocks( $agenda_section_pattern['content'] )
-		// 			// 	// $agenda_section_pattern,
-		// 			// 	// $parsed_agenda_section_pattern,
-		// 			// 	// render_block( $parsed_agenda_section_pattern )
-		// 			// );
-		// 		}
-		// 	}
-	
-		// }
+			if ( $query_items->have_posts() ) {
+				// we only use post ids for the $metabox_items array
+				$metabox_items = $query_items->posts;
+			}
+
+			// ensure to reset the main query to original main query
+			wp_reset_query();
+
+			if ( $metabox_items ) {
+				// we have events
+				$context['metabox_events']          = [];
+				$context['metabox_events']['items'] = [];
+				$context['metabox_events']['title'] = $metabox_fields['metabox_events_titel'] ?? '';
+				$context['metabox_events']['descr'] = $metabox_fields['metabox_events_description'] ?? '';
+				$url                                = $metabox_fields['metabox_events_url_overview'] ?? [];
+
+				// Add CTA 'overzichtslink' as cta Array to metabox_events
+				if ( $url && isset( $url['title'] ) && isset( $url['url'] ) ) {
+					$context['metabox_events']['cta']          = [];
+					$context['metabox_events']['cta']['title'] = $url['title'];
+					$context['metabox_events']['cta']['url']   = $url['url'];
+				}
+
+				foreach ( $metabox_items as $postitem ) {
+
+					$item                                 = prepare_card_content( get_post( $postitem ) );
+					$context['metabox_events']['items'][] = $item;
+				}
+				$context['metabox_events']['columncounter'] = count( $context['metabox_events']['items'] );
+			}
+		}
+
 
 	}
 
