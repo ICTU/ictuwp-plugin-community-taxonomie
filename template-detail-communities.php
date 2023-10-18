@@ -7,22 +7,22 @@
  * @since      Timber 0.1
  */
 
-$timber_post             = new Timber\Post();
+$timber_post = new Timber\Post();
 
 $current_community_taxid = get_current_community_tax();
 $current_community_term  = get_term_by( 'id', $current_community_taxid, GC_COMMUNITY_TAX );
 
-$context                 = Timber::context();
-$context['post']         = $timber_post;
-$context['modifier']      = 'community-detail';
-$context['is_unboxed']   = true;
+$context               = Timber::context();
+$context['post']       = $timber_post;
+$context['modifier']   = 'community-detail';
+$context['is_unboxed'] = true;
 
 if ( $current_community_term && ! is_wp_error( $current_community_term ) ) {
 	// Update body class
-	$context['body_class'] = ($context['body_class'] ?: '') . ' community--' . $current_community_term->slug;
+	$context['body_class'] = ( $context['body_class'] ?: '' ) . ' community--' . $current_community_term->slug;
 }
 
-$templates                 = [ 'community-detail.twig', 'page.twig' ];
+$templates = [ 'community-detail.twig', 'page.twig' ];
 
 /**
  * returns the ID for the community term that is
@@ -34,7 +34,7 @@ function get_current_community_tax() {
 	global $post;
 
 	$term_id = get_field( 'community_detail_select_community_term' ) ?: 0;
-	if ( !$term_id ) {
+	if ( ! $term_id ) {
 		$aargh = _x( 'Geen community gekoppeld aan deze pagina. ', 'Community taxonomy error message', 'gctheme' );
 		if ( current_user_can( 'editor' ) ) {
 			$editlink = get_edit_post_link( $post );
@@ -76,7 +76,7 @@ if ( $current_community_term && ! is_wp_error( $current_community_term ) ) {
 			// // .. enqueue colorscheme CSS
 			// wp_enqueue_style( $context['colorscheme'] . '-theme', get_stylesheet_directory_uri() . '/assets/css/' . $context['colorscheme'] . '-theme.css', ['gc-flavor'], 'doit', 'all' );
 			// .. update body class
-			$context['body_class'] = ($context['body_class'] ?: '') . ' colorscheme--' . $context['colorscheme'];
+			$context['body_class'] = ( $context['body_class'] ?: '' ) . ' colorscheme--' . $context['colorscheme'];
 		}
 
 		// If we have a visual, store it in $context
@@ -122,43 +122,192 @@ if ( $current_community_term && ! is_wp_error( $current_community_term ) ) {
 
 	// text for 'inleiding' is taken from term description
 	// $timber_post->post_content = $current_community_term->description;
-	
+
 	// Use Intro instead?!
 	$context['intro'] = wpautop( $current_community_term->description );
 
 	/**
 	 *  Events box
 	 * ----------------------------- */
-	 // Only show events if Events Manager plugin is active
+	// Only show events if Events Manager plugin is active
 	if ( class_exists( 'EM_Events' ) ) {
+		// the events manager is active, which helps for selecting events
 
-		// // TEST: render block pattern
-		// // Challenge: how to fill in custom data?
-		// $agenda_pattern_name = 'gc/section-agenda';
+		$metabox_fields = get_field( 'events' );
 
-		// if ( class_exists( 'WP_Block_Patterns_Registry' ) ) {
+		if ( $metabox_fields && 'ja' === $metabox_fields['metabox_events_show_or_not'] ) {
 
-		// 	$block_pattern_registry = WP_Block_Patterns_Registry::get_instance();
+			$maxnr            = $metabox_fields['metabox_events_max_nr'] ?? 3;
+			$metabox_item_ids = array();
 
-		// 	if ( $block_pattern_registry ) {
-		// 		$agenda_section_pattern = $block_pattern_registry->get_registered( $agenda_pattern_name );
-		// 		if ( $agenda_section_pattern ) {
-		// 			// Add our pattern HTML to our metabox_content context
-		// 			$context['metabox_content'] = ( $context['metabox_content'] ?? '' ) . do_blocks( $agenda_section_pattern['content'] );
+			// select latest events for $current_community_taxid
+			// _event_start_date is a meta field for the events post type
+			// this query selects future events for the $current_community_taxid
+			$currentdate = date( "Y-m-d" );
+			$args        = array(
+				'posts_per_page' => $maxnr,
+				'post_type'      => EM_POST_TYPE_EVENT,
+				'meta_key'       => '_event_start_date',
+				'orderby'        => 'meta_value_num',
+				'post_status'    => 'publish',
+				'order'          => 'ASC', // order by start date ascending
+				'fields'         => 'ids', // only return IDs
+				'tax_query'      => array(
+					array(
+						'taxonomy' => GC_COMMUNITY_TAX,
+						'field'    => 'term_id',
+						'terms'    => $current_community_term->term_id,
+					)
+				),
+				'meta_query'     => array(
+					array(
+						'key'     => '_event_start_date',
+						'value'   => $currentdate,
+						'compare' => '>=',
+						'type'    => 'DATE',
+					),
+				)
+			);
+			$query_items = new WP_Query( $args );
 
-		// 			// dump(
-		// 			// 	$agenda_section_pattern
-		// 			// 	// do_blocks( $agenda_section_pattern['content'] )
-		// 			// 	// $agenda_section_pattern,
-		// 			// 	// $parsed_agenda_section_pattern,
-		// 			// 	// render_block( $parsed_agenda_section_pattern )
-		// 			// );
-		// 		}
-		// 	}
-	
-		// }
+			if ( $query_items->have_posts() ) {
+				// we only use post ids for the $metabox_item_ids array
+				$metabox_item_ids = $query_items->posts;
+			}
+
+			// ensure to reset the main query to original main query
+			wp_reset_query();
+
+			if ( $metabox_item_ids ) {
+				// we have events
+				$context['metabox_events']          = [];
+				$context['metabox_events']['items'] = [];
+				$context['metabox_events']['title'] = $metabox_fields['metabox_events_titel'] ?? '';
+				$context['metabox_events']['descr'] = $metabox_fields['metabox_events_description'] ?? '';
+				$url                                = $metabox_fields['metabox_events_url_overview'] ?? [];
+
+				// Add CTA 'overzichtslink' as cta Array to metabox_events
+				if ( $url && isset( $url['title'] ) && isset( $url['url'] ) ) {
+					$context['metabox_events']['cta']          = [];
+					$context['metabox_events']['cta']['title'] = $url['title'];
+					$context['metabox_events']['cta']['url']   = $url['url'];
+				}
+
+				foreach ( $metabox_item_ids as $post_id ) {
+
+					$item                                 = prepare_card_content( get_post( $post_id ) );
+					$context['metabox_events']['items'][] = $item;
+				}
+				$context['metabox_events']['columncounter'] = count( $context['metabox_events']['items'] );
+			}
+		}
 
 	}
+
+	/**
+	 * Posts box
+	 * ----------------------------- */
+	$metabox_fields = get_field( 'berichten' );
+
+	if ( $metabox_fields && 'ja' === $metabox_fields['metabox_posts_show_or_not'] ) {
+
+		$method           = $metabox_fields['metabox_posts_selection_method'] ?? '';
+		$maxnr            = 3; // todo TBD: should this be a user editable field?
+		$metabox_item_ids = array();
+
+		if ( 'manual' === $method ) {
+			// manually selected events, returns an array of posts
+			$metabox_item_ids = $metabox_fields['metabox_posts_selection_manual'];
+
+		} else {
+			$args = array(
+				'posts_per_page' => $maxnr,
+				'post_type'      => 'post',
+				'post_status'    => 'publish',
+				'fields'         => 'ids', // only return IDs
+				'tax_query'      => array(
+					array(
+						'taxonomy' => GC_COMMUNITY_TAX,
+						'field'    => 'term_id',
+						'terms'    => $current_community_term->term_id,
+					)
+				)
+			);
+
+			$query_items = new WP_Query( $args );
+			if ( $query_items->have_posts() ) {
+				// we only use post ids for the $metabox_item_ids array
+				$metabox_item_ids = $query_items->posts;
+			}
+
+			// ensure to reset the main query to original main query
+			wp_reset_query();
+		}
+
+		if ( $metabox_item_ids ) {
+
+			$context['metabox_posts']                = [];
+			$context['metabox_posts']['items']       = [];
+			$context['metabox_posts']['cta']         = [];
+			$context['metabox_posts']['title']       = $metabox_fields['metabox_posts_titel'] ?? '';
+			$context['metabox_posts']['description'] = $metabox_fields['metabox_posts_description'] ?? '';
+			$url                                     = $metabox_fields['metabox_posts_url_overview'] ?? [];
+
+			// Add click through link for all posts
+			if ( $url ) {
+				// manually added CTA 'overzichtslink'
+				$context['metabox_posts']['cta']['title'] = $url['title'];
+				$context['metabox_posts']['cta']['url']   = $url['url'];
+			} else {
+				// automagically add link to LLK page for posts
+				$template = 'template-llk-posts.php';
+				$pages    = get_posts( array(
+					'post_type'  => 'page',
+					'fields'     => 'ids',
+					'meta_key'   => '_wp_page_template',
+					'meta_value' => $template
+				) );
+
+				if ( $pages && $pages[0] ) {
+					// a relevant LLK page was found
+
+					$context['metabox_posts']['cta']['title'] = _x( 'Bekijk alle berichten', 'Linktekst voor LLK pagina met berichten', 'gctheme' );
+
+					// see if we can add GC_COMMUNITY_TAX as extra filter
+					$term_info = get_term_by( 'id', $current_community_taxid, GC_COMMUNITY_TAX );
+
+					if ( $term_info && ! is_wp_error( $term_info ) ) {
+						// append community slug to LLK link
+						// TODO: FIXME: GC_QUERYVAR_COMMUNITY is not defined?
+						$item_url_vars                          = [ (defined( 'GC_QUERYVAR_COMMUNITY' ) ? GC_QUERYVAR_COMMUNITY : 'community' ) => $term_info->slug ];
+						$context['metabox_posts']['cta']['url'] = add_query_arg( $item_url_vars, get_permalink( $pages[0] ) );
+					} else {
+						// just use the permalink
+						$context['metabox_posts']['cta']['url'] = get_permalink( $pages[0] );
+					}
+				} else {
+					// no manual link added, no page found.
+					// so: no link
+				}
+			}
+
+			foreach ( $metabox_item_ids as $post_id ) {
+
+				$item  = prepare_card_content( get_post( $post_id ) );
+				$image = get_the_post_thumbnail_url( $post_id, IMAGESIZE_16x9 );
+				if ( $image ) {
+					// decorative image, no value for alt attr.
+					$item['img'] = '<img src="' . $image . '" alt="" />';
+					// Provide Image as URL instead of HTML?
+					// $item['img']     = $image;
+					// $item['img_alt'] = '';
+				}
+				$context['metabox_posts']['items'][] = $item;
+			}
+			$context['metabox_posts']['columncounter'] = count( $context['metabox_posts']['items'] );
+		}
+	}
+
 
 }
 
