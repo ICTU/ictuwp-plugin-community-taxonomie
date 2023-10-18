@@ -140,9 +140,9 @@ if ( $current_community_term && ! is_wp_error( $current_community_term ) ) {
 			$maxnr         = $metabox_fields['metabox_events_max_nr'] ?? 3;
 			$metabox_items = array();
 
-			// select latest events for $current_thema_taxid
+			// select latest events for $current_community_taxid
 			// _event_start_date is a meta field for the events post type
-			// this query selects future events for the $current_thema_taxid
+			// this query selects future events for the $current_community_taxid
 			$currentdate = date( "Y-m-d" );
 			$args        = array(
 				'posts_per_page' => $maxnr,
@@ -201,6 +201,7 @@ if ( $current_community_term && ! is_wp_error( $current_community_term ) ) {
 				$context['metabox_events']['columncounter'] = count( $context['metabox_events']['items'] );
 			}
 		}
+
 	}
 
 	/**
@@ -272,12 +273,13 @@ if ( $current_community_term && ! is_wp_error( $current_community_term ) ) {
 
 					$context['metabox_posts']['cta']['title'] = _x( 'Bekijk alle berichten', 'Linktekst voor LLK pagina met berichten', 'gctheme' );
 
-					// see if we can add GC_THEMA_TAX as extra filter
-					$term_info = get_term_by( 'id', $current_thema_taxid, GC_THEMA_TAX );
+					// see if we can add GC_COMMUNITY_TAX as extra filter
+					$term_info = get_term_by( 'id', $current_community_taxid, GC_COMMUNITY_TAX );
 
 					if ( $term_info && ! is_wp_error( $term_info ) ) {
-						// append thema slug to LLK link
-						$item_url_vars                          = [ GC_QUERYVAR_THEMA => $term_info->slug ];
+						// append community slug to LLK link
+						// TODO: FIXME: GC_QUERYVAR_COMMUNITY is not defined?
+						$item_url_vars                          = [ (defined( 'GC_QUERYVAR_COMMUNITY' ) ? GC_QUERYVAR_COMMUNITY : 'community' ) => $term_info->slug ];
 						$context['metabox_posts']['cta']['url'] = add_query_arg( $item_url_vars, get_permalink( $pages[0] ) );
 					} else {
 						// just use the permalink
@@ -292,7 +294,7 @@ if ( $current_community_term && ! is_wp_error( $current_community_term ) ) {
 			foreach ( $metabox_items as $postitem ) {
 
 				$item  = prepare_card_content( get_post( $postitem ) );
-				$image = get_the_post_thumbnail_url( $postitem, $imagesize_for_thumbs );
+				$image = get_the_post_thumbnail_url( $postitem, IMAGESIZE_16x9 );
 				if ( $image ) {
 					// decorative image, no value for alt attr.
 					$item['img'] = '<img src="' . $image . '" alt="" />';
