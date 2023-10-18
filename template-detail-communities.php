@@ -7,22 +7,22 @@
  * @since      Timber 0.1
  */
 
-$timber_post             = new Timber\Post();
+$timber_post = new Timber\Post();
 
 $current_community_taxid = get_current_community_tax();
 $current_community_term  = get_term_by( 'id', $current_community_taxid, GC_COMMUNITY_TAX );
 
-$context                 = Timber::context();
-$context['post']         = $timber_post;
-$context['modifier']      = 'community-detail';
-$context['is_unboxed']   = true;
+$context               = Timber::context();
+$context['post']       = $timber_post;
+$context['modifier']   = 'community-detail';
+$context['is_unboxed'] = true;
 
 if ( $current_community_term && ! is_wp_error( $current_community_term ) ) {
 	// Update body class
-	$context['body_class'] = ($context['body_class'] ?: '') . ' community--' . $current_community_term->slug;
+	$context['body_class'] = ( $context['body_class'] ?: '' ) . ' community--' . $current_community_term->slug;
 }
 
-$templates                 = [ 'community-detail.twig', 'page.twig' ];
+$templates = [ 'community-detail.twig', 'page.twig' ];
 
 /**
  * returns the ID for the community term that is
@@ -34,7 +34,7 @@ function get_current_community_tax() {
 	global $post;
 
 	$term_id = get_field( 'community_detail_select_community_term' ) ?: 0;
-	if ( !$term_id ) {
+	if ( ! $term_id ) {
 		$aargh = _x( 'Geen community gekoppeld aan deze pagina. ', 'Community taxonomy error message', 'gctheme' );
 		if ( current_user_can( 'editor' ) ) {
 			$editlink = get_edit_post_link( $post );
@@ -76,7 +76,7 @@ if ( $current_community_term && ! is_wp_error( $current_community_term ) ) {
 			// // .. enqueue colorscheme CSS
 			// wp_enqueue_style( $context['colorscheme'] . '-theme', get_stylesheet_directory_uri() . '/assets/css/' . $context['colorscheme'] . '-theme.css', ['gc-flavor'], 'doit', 'all' );
 			// .. update body class
-			$context['body_class'] = ($context['body_class'] ?: '') . ' colorscheme--' . $context['colorscheme'];
+			$context['body_class'] = ( $context['body_class'] ?: '' ) . ' colorscheme--' . $context['colorscheme'];
 		}
 
 		// If we have a visual, store it in $context
@@ -122,7 +122,7 @@ if ( $current_community_term && ! is_wp_error( $current_community_term ) ) {
 
 	// text for 'inleiding' is taken from term description
 	// $timber_post->post_content = $current_community_term->description;
-	
+
 	// Use Intro instead?!
 	$context['intro'] = wpautop( $current_community_term->description );
 
