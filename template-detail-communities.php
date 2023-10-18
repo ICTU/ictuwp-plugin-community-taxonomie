@@ -201,9 +201,111 @@ if ( $current_community_term && ! is_wp_error( $current_community_term ) ) {
 				$context['metabox_events']['columncounter'] = count( $context['metabox_events']['items'] );
 			}
 		}
-
-
 	}
+
+	/**
+	 * Posts box
+	 * ----------------------------- */
+	$metabox_fields = get_field( 'berichten' );
+
+	if ( $metabox_fields && 'ja' === $metabox_fields['metabox_posts_show_or_not'] ) {
+
+		$method        = $metabox_fields['metabox_posts_selection_method'] ?? '';
+		$maxnr         = 3; // todo TBD: should this be a user editable field?
+		$metabox_items = array();
+
+		if ( 'manual' === $method ) {
+			// manually selected events, returns an array of posts
+			$metabox_items = $metabox_fields['metabox_posts_selection_manual'];
+
+		} else {
+			$args = array(
+				'posts_per_page' => $maxnr,
+				'post_type'      => 'post',
+				'post_status'    => 'publish',
+				'fields'         => 'ids', // only return IDs
+				'tax_query'      => array(
+					array(
+						'taxonomy' => GC_COMMUNITY_TAX,
+						'field'    => 'term_id',
+						'terms'    => $current_community_term->term_id,
+					)
+				)
+			);
+
+			$query_items = new WP_Query( $args );
+			if ( $query_items->have_posts() ) {
+				// we only use post ids for the $metabox_items array
+				$metabox_items = $query_items->posts;
+			}
+
+			// ensure to reset the main query to original main query
+			wp_reset_query();
+		}
+
+		if ( $metabox_items ) {
+
+			$context['metabox_posts']                = [];
+			$context['metabox_posts']['items']       = [];
+			$context['metabox_posts']['cta']         = [];
+			$context['metabox_posts']['title']       = $metabox_fields['metabox_posts_titel'] ?? '';
+			$context['metabox_posts']['description'] = $metabox_fields['metabox_posts_description'] ?? '';
+			$url                                     = $metabox_fields['metabox_posts_url_overview'] ?? [];
+
+			// Add click through link for all posts
+			if ( $url ) {
+				// manually added CTA 'overzichtslink'
+				$context['metabox_posts']['cta']['title'] = $url['title'];
+				$context['metabox_posts']['cta']['url']   = $url['url'];
+			} else {
+				// automagically add link to LLK page for posts
+				$template = 'template-llk-posts.php';
+				$pages    = get_posts( array(
+					'post_type'  => 'page',
+					'fields'     => 'ids',
+					'meta_key'   => '_wp_page_template',
+					'meta_value' => $template
+				) );
+
+				if ( $pages && $pages[0] ) {
+					// a relevant LLK page was found
+
+					$context['metabox_posts']['cta']['title'] = _x( 'Bekijk alle berichten', 'Linktekst voor LLK pagina met berichten', 'gctheme' );
+
+					// see if we can add GC_THEMA_TAX as extra filter
+					$term_info = get_term_by( 'id', $current_thema_taxid, GC_THEMA_TAX );
+
+					if ( $term_info && ! is_wp_error( $term_info ) ) {
+						// append thema slug to LLK link
+						$item_url_vars                          = [ GC_QUERYVAR_THEMA => $term_info->slug ];
+						$context['metabox_posts']['cta']['url'] = add_query_arg( $item_url_vars, get_permalink( $pages[0] ) );
+					} else {
+						// just use the permalink
+						$context['metabox_posts']['cta']['url'] = get_permalink( $pages[0] );
+					}
+				} else {
+					// no manual link added, no page found.
+					// so: no link
+				}
+			}
+
+			foreach ( $metabox_items as $postitem ) {
+
+				$item  = prepare_card_content( get_post( $postitem ) );
+				$image = get_the_post_thumbnail_url( $postitem, $imagesize_for_thumbs );
+				if ( $image ) {
+					// decorative image, no value for alt attr.
+					$item['img'] = '<img src="' . $image . '" alt="" />';
+					// Provide Image as URL instead of HTML?
+					// $item['img']     = $image;
+					// $item['img_alt'] = '';
+				}
+				$context['metabox_posts']['items'][] = $item;
+			}
+			$context['metabox_posts']['columncounter'] = count( $context['metabox_posts']['items'] );
+		}
+	}
+
 
 }
 
