@@ -137,8 +137,8 @@ if ( $current_community_term && ! is_wp_error( $current_community_term ) ) {
 
 		if ( $metabox_fields && 'ja' === $metabox_fields['metabox_events_show_or_not'] ) {
 
-			$maxnr         = $metabox_fields['metabox_events_max_nr'] ?? 3;
-			$metabox_items = array();
+			$maxnr            = $metabox_fields['metabox_events_max_nr'] ?? 3;
+			$metabox_item_ids = array();
 
 			// select latest events for $current_community_taxid
 			// _event_start_date is a meta field for the events post type
@@ -171,14 +171,14 @@ if ( $current_community_term && ! is_wp_error( $current_community_term ) ) {
 			$query_items = new WP_Query( $args );
 
 			if ( $query_items->have_posts() ) {
-				// we only use post ids for the $metabox_items array
-				$metabox_items = $query_items->posts;
+				// we only use post ids for the $metabox_item_ids array
+				$metabox_item_ids = $query_items->posts;
 			}
 
 			// ensure to reset the main query to original main query
 			wp_reset_query();
 
-			if ( $metabox_items ) {
+			if ( $metabox_item_ids ) {
 				// we have events
 				$context['metabox_events']          = [];
 				$context['metabox_events']['items'] = [];
@@ -193,9 +193,9 @@ if ( $current_community_term && ! is_wp_error( $current_community_term ) ) {
 					$context['metabox_events']['cta']['url']   = $url['url'];
 				}
 
-				foreach ( $metabox_items as $postitem ) {
+				foreach ( $metabox_item_ids as $post_id ) {
 
-					$item                                 = prepare_card_content( get_post( $postitem ) );
+					$item                                 = prepare_card_content( get_post( $post_id ) );
 					$context['metabox_events']['items'][] = $item;
 				}
 				$context['metabox_events']['columncounter'] = count( $context['metabox_events']['items'] );
@@ -211,13 +211,13 @@ if ( $current_community_term && ! is_wp_error( $current_community_term ) ) {
 
 	if ( $metabox_fields && 'ja' === $metabox_fields['metabox_posts_show_or_not'] ) {
 
-		$method        = $metabox_fields['metabox_posts_selection_method'] ?? '';
-		$maxnr         = 3; // todo TBD: should this be a user editable field?
-		$metabox_items = array();
+		$method           = $metabox_fields['metabox_posts_selection_method'] ?? '';
+		$maxnr            = 3; // todo TBD: should this be a user editable field?
+		$metabox_item_ids = array();
 
 		if ( 'manual' === $method ) {
 			// manually selected events, returns an array of posts
-			$metabox_items = $metabox_fields['metabox_posts_selection_manual'];
+			$metabox_item_ids = $metabox_fields['metabox_posts_selection_manual'];
 
 		} else {
 			$args = array(
@@ -236,15 +236,15 @@ if ( $current_community_term && ! is_wp_error( $current_community_term ) ) {
 
 			$query_items = new WP_Query( $args );
 			if ( $query_items->have_posts() ) {
-				// we only use post ids for the $metabox_items array
-				$metabox_items = $query_items->posts;
+				// we only use post ids for the $metabox_item_ids array
+				$metabox_item_ids = $query_items->posts;
 			}
 
 			// ensure to reset the main query to original main query
 			wp_reset_query();
 		}
 
-		if ( $metabox_items ) {
+		if ( $metabox_item_ids ) {
 
 			$context['metabox_posts']                = [];
 			$context['metabox_posts']['items']       = [];
@@ -291,10 +291,10 @@ if ( $current_community_term && ! is_wp_error( $current_community_term ) ) {
 				}
 			}
 
-			foreach ( $metabox_items as $postitem ) {
+			foreach ( $metabox_item_ids as $post_id ) {
 
-				$item  = prepare_card_content( get_post( $postitem ) );
-				$image = get_the_post_thumbnail_url( $postitem, IMAGESIZE_16x9 );
+				$item  = prepare_card_content( get_post( $post_id ) );
+				$image = get_the_post_thumbnail_url( $post_id, IMAGESIZE_16x9 );
 				if ( $image ) {
 					// decorative image, no value for alt attr.
 					$item['img'] = '<img src="' . $image . '" alt="" />';
