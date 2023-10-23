@@ -279,7 +279,7 @@ if ( $current_community_term && ! is_wp_error( $current_community_term ) ) {
 					if ( $term_info && ! is_wp_error( $term_info ) ) {
 						// append community slug to LLK link
 						// TODO: FIXME: GC_QUERYVAR_COMMUNITY is not defined?
-						$item_url_vars                          = [ (defined( 'GC_QUERYVAR_COMMUNITY' ) ? GC_QUERYVAR_COMMUNITY : 'community' ) => $term_info->slug ];
+						$item_url_vars                          = [ ( defined( 'GC_QUERYVAR_COMMUNITY' ) ? GC_QUERYVAR_COMMUNITY : 'community' ) => $term_info->slug ];
 						$context['metabox_posts']['cta']['url'] = add_query_arg( $item_url_vars, get_permalink( $pages[0] ) );
 					} else {
 						// just use the permalink
@@ -305,6 +305,20 @@ if ( $current_community_term && ! is_wp_error( $current_community_term ) ) {
 				$context['metabox_posts']['items'][] = $item;
 			}
 			$context['metabox_posts']['columncounter'] = count( $context['metabox_posts']['items'] );
+		}
+	}
+
+	/**
+	 * Contact form box
+	 * (actually it's a Gravity Forms form)
+	 * ----------------------------- */
+	$metabox_contactform_id = get_field( 'metabox_contactform_id' );
+	if ( $metabox_contactform_id ) {
+		$gravityforms_block = '<!-- wp:gravityforms/form {"formId":"' . $metabox_contactform_id . '"} /-->';
+		$parsed_blocks      = do_blocks( $gravityforms_block );
+
+		if ( $parsed_blocks ) {
+			$context['metabox_contactform'] = $parsed_blocks;
 		}
 	}
 
