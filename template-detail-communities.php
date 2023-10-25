@@ -118,13 +118,23 @@ if ( $current_community_term && ! is_wp_error( $current_community_term ) ) {
 	// }
 
 	// Page title is taken from term name
+	// -----------------------------
 	$timber_post->post_title = $current_community_term->name;
 
 	// text for 'inleiding' is taken from term description
+	// -----------------------------
 	// $timber_post->post_content = $current_community_term->description;
-
 	// Use Intro instead?!
 	$context['intro'] = wpautop( $current_community_term->description );
+	
+	/**
+	 *  Intro Text (Metabox)
+	 * ----------------------------- */
+	$metabox_intro_text = get_field( 'metabox_intro_text' );
+	if ( ! empty( $metabox_intro_text ) ) {
+		$context['metabox_intro_text'] = $metabox_intro_text;
+	}
+
 
 	/**
 	 *  Events box
