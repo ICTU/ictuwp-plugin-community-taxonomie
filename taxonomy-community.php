@@ -25,11 +25,11 @@ $templates     = [
 foreach ( get_fields( $archive ) as $key => $val ) {
 
 	// Add path to image url
-	if( $key == 'community_taxonomy_visual' && defined( 'GC_COMMUNITY_TAX_VISUALS_PATH' ) ) {
+	if( $key == 'community_taxonomy_visual' && defined( 'GC_COMMUNITY_TAX_ASSETS_PATH' ) ) {
 		// Optionally convert to img tag with:
 		//   '<img width="800" height="450" src="%s/%s" class="community-taxonomy-visual" alt="" decoding="async" loading="lazy" />',
 		// for now just return the path:
-		$val = sprintf( '%s/%s', GC_COMMUNITY_TAX_VISUALS_PATH, $val );
+		$val = sprintf( '%s/images/%s', GC_COMMUNITY_TAX_ASSETS_PATH, $val );
 	}
 
 	$archive->$key = $val;

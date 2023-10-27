@@ -8,8 +8,8 @@
  * Plugin Name:         ICTU / Gebruiker Centraal / Community taxonomie
  * Plugin URI:          https://github.com/ICTU/ictuwp-plugin-community-taxonomie
  * Description:         Plugin voor het aanmaken van de 'community'-taxonomie
- * Version:             1.1.0
- * Version description: Add extra ACF fields: Colorscheme, Visual & Link
+ * Version:             1.2.0
+ * Version description: Add extra ACF field: Contactform (Gravity)
  * Author:              David Hund
  * Author URI:          https://github.com/ICTU/ictuwp-plugin-community-taxonomie/
  * License:             GPL-3.0+
@@ -36,7 +36,7 @@ if ( get_bloginfo( 'language' ) !== 'nl-NL' ) {
 defined( 'GC_COMMUNITY_TAX' ) or define( 'GC_COMMUNITY_TAX', $slug );
 defined( 'GC_COMMUNITY_TAX_OVERVIEW_TEMPLATE' ) or define( 'GC_COMMUNITY_TAX_OVERVIEW_TEMPLATE', 'template-overview-communities.php' );
 defined( 'GC_COMMUNITY_TAX_DETAIL_TEMPLATE' ) or define( 'GC_COMMUNITY_TAX_DETAIL_TEMPLATE', 'template-detail-communities.php' );
-defined( 'GC_COMMUNITY_TAX_VISUALS_PATH' ) or define( 'GC_COMMUNITY_TAX_VISUALS_PATH' , '/wp-content/plugins/ictuwp-plugin-community-taxonomie/assets/images' );
+defined( 'GC_COMMUNITY_TAX_ASSETS_PATH' ) or define( 'GC_COMMUNITY_TAX_ASSETS_PATH' , '/wp-content/plugins/ictuwp-plugin-community-taxonomie/assets' );
 //========================================================================================================
 // only this plugin should activate the GC_COMMUNITY_TAX taxonomy
 if ( ! taxonomy_exists( GC_COMMUNITY_TAX ) ) {
@@ -109,6 +109,9 @@ if ( ! class_exists( 'ICTU_GC_community_taxonomy' ) ) :
 			// Require all needed ACF fieldgroup fields
 			require_once plugin_dir_path( __FILE__ ) . 'includes/community-taxonomy-acf-fields.php';
 
+			// Require all needed ACF fieldgroup fields
+			require_once plugin_dir_path( __FILE__ ) . 'includes/community-taxonomy-page-acf-fields.php';
+
 		}
 
 
@@ -124,7 +127,7 @@ if ( ! class_exists( 'ICTU_GC_community_taxonomy' ) ) :
 
 			// Get global post
 			global $post;
-			$file        = '';
+			$file       = '';
 			$pluginpath = plugin_dir_path( __FILE__ );
 
 
@@ -173,10 +176,47 @@ if ( ! class_exists( 'ICTU_GC_community_taxonomy' ) ) :
 		 *
 		 */
 		public function fn_ictu_community_yoast_filter_breadcrumb( $links ) {
+			global $post;
 
-			if ( is_tax( GC_COMMUNITY_TAX ) ) {
-				// this filter is only for terms in GC_COMMUNITY_TAX taxonomy
+			if ( $post && is_page() ) {
 
+				// Currently Querying a Page
+				// Try and see if it has the GC_COMMUNITY_TAX_DETAIL_TEMPLATE template
+				// and if so, append the Community Overview Page to the breadcrumb
+				// But only if the current page is not a childpage of the parent...
+				if (  $post->post_parent !== 0 ) {
+					// page does have a parent, whatever parent it might be, so:
+					// do nothing extra for breadcrumb
+
+				} else {
+					// page does NOT have a parent, so let's add the GC_COMMUNITY_TAX_DETAIL_TEMPLATE to
+					$page_template = get_post_meta( $post->ID, '_wp_page_template', true );
+
+					if ( $page_template && $page_template === GC_COMMUNITY_TAX_DETAIL_TEMPLATE ) {
+						// current page has template = GC_COMMUNITY_TAX_DETAIL_TEMPLATE
+
+						// Get the Community Overview Page to append to our breadcrumb
+						$community_overview_page_id = $this->fn_ictu_community_get_community_overview_page();
+
+						if ( $community_overview_page_id ) {
+							// We have a Overview-page ID
+							// and it is not the parent of the current page
+							// Use this page as GC_COMMUNITY_TAX term parent in the breadcrumb
+							$taxonomy_link = array(
+								'url'  => get_permalink( $community_overview_page_id ),
+								'text' => get_the_title( $community_overview_page_id )
+							);
+							array_splice( $links, - 1, 0, [ $taxonomy_link ] );
+						}
+
+					}
+
+				}
+
+
+			} elseif ( is_tax( GC_COMMUNITY_TAX ) ) {
+
+				// NOT currently Querying a Page, but a GC_COMMUNITY_TAX term
 				$term = get_queried_object();
 				// Append taxonomy if 1st-level child term only
 				// old: Home > Term
@@ -212,6 +252,7 @@ if ( ! class_exists( 'ICTU_GC_community_taxonomy' ) ) :
 						// array_splice( $links, -1, 0, [$taxonomy_link] );
 					}
 				}
+
 			}
 
 			return $links;
@@ -246,7 +287,7 @@ if ( ! class_exists( 'ICTU_GC_community_taxonomy' ) ) :
 				'meta_key'    => '_wp_page_template',
 				'meta_value'  => GC_COMMUNITY_TAX_OVERVIEW_TEMPLATE
 			);
-			$overview_page = get_pages( $page_template_query_args );
+			$overview_page            = get_pages( $page_template_query_args );
 
 			if ( $overview_page && isset( $overview_page[0]->ID ) ) {
 				$return = $overview_page[0]->ID;
@@ -290,8 +331,8 @@ if ( defined( GC_COMMUNITY_TAX ) or taxonomy_exists( GC_COMMUNITY_TAX ) ) {
 function fn_ictu_community_add_templates() {
 
 	$return_array = array(
-		GC_COMMUNITY_TAX_OVERVIEW_TEMPLATE => _x( 'Community / overzicht', 'label page template', 'gctheme' ),
-		GC_COMMUNITY_TAX_DETAIL_TEMPLATE   => _x( 'Community / detailpagina', 'label page template', 'gctheme' )
+		GC_COMMUNITY_TAX_OVERVIEW_TEMPLATE => _x( '[Community] overzicht', 'label page template', 'gctheme' ),
+		GC_COMMUNITY_TAX_DETAIL_TEMPLATE   => _x( '[Community] detailpagina', 'label page template', 'gctheme' )
 	);
 
 	return $return_array;

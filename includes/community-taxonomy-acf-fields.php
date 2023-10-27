@@ -31,7 +31,7 @@ if ( ! function_exists( 'acf_add_local_field_group' ) ) {
 // Available Taxonomy visuals
 // ----------------------------
 // Base path for existing community taxonomy visuals
-$VISUALS_BASE_IMG = '<img src="' . GC_COMMUNITY_TAX_VISUALS_PATH . '/%s" width="75" height="50" class="community-taxonomy-visual" alt="" />%s';
+$VISUALS_BASE_IMG = '<img src="' . GC_COMMUNITY_TAX_ASSETS_PATH . '/images/%s" width="75" height="50" class="community-taxonomy-visual" alt="" />%s';
 
 $visuals = array(
 	'c-default.svg' => 'Standaard',
@@ -77,7 +77,7 @@ $color_themes = array(
 if ( function_exists( 'gc_get_colorschemes' ) ) {
 	$available_color_themes = gc_get_colorschemes();
 	foreach ( $available_color_themes as $key => $val ) {
-		$color_themes[ $key ] = '<span class="swatch swatch--' . $key . '">' . $val['name'] . '</span>';
+		$color_themes[ $key ] = '<span class="swatch swatch--' . $key . '">' . $val['name'] . ' ' . _x( 'Kleurenschema', 'Community taxonomy ACF field definition', 'gctheme' ) . '</span>';
 	}
 
 	// hardcode
