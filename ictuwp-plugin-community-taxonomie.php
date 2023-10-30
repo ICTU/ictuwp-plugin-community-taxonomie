@@ -8,8 +8,8 @@
  * Plugin Name:         ICTU / Gebruiker Centraal / Community taxonomie
  * Plugin URI:          https://github.com/ICTU/ictuwp-plugin-community-taxonomie
  * Description:         Plugin voor het aanmaken van de 'community'-taxonomie
- * Version:             1.2.0
- * Version description: Add extra ACF field: Contactform (Gravity)
+ * Version:             1.3.0
+ * Version description: Fix: allow manual selection of events
  * Author:              David Hund
  * Author URI:          https://github.com/ICTU/ictuwp-plugin-community-taxonomie/
  * License:             GPL-3.0+
