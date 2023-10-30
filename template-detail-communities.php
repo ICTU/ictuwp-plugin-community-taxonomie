@@ -147,46 +147,53 @@ if ( $current_community_term && ! is_wp_error( $current_community_term ) ) {
 
 		if ( $metabox_fields && 'ja' === $metabox_fields['metabox_events_show_or_not'] ) {
 
+			$method           = $metabox_fields['metabox_events_selection_method'] ?? '';
 			$maxnr            = $metabox_fields['metabox_events_max_nr'] ?? 3;
 			$metabox_item_ids = array();
 
-			// select latest events for $current_community_taxid
-			// _event_start_date is a meta field for the events post type
-			// this query selects future events for the $current_community_taxid
-			$currentdate = date( "Y-m-d" );
-			$args        = array(
-				'posts_per_page' => $maxnr,
-				'post_type'      => EM_POST_TYPE_EVENT,
-				'meta_key'       => '_event_start_date',
-				'orderby'        => 'meta_value_num',
-				'post_status'    => 'publish',
-				'order'          => 'ASC', // order by start date ascending
-				'fields'         => 'ids', // only return IDs
-				'tax_query'      => array(
-					array(
-						'taxonomy' => GC_COMMUNITY_TAX,
-						'field'    => 'term_id',
-						'terms'    => $current_community_term->term_id,
-					)
-				),
-				'meta_query'     => array(
-					array(
-						'key'     => '_event_start_date',
-						'value'   => $currentdate,
-						'compare' => '>=',
-						'type'    => 'DATE',
+			if ( 'manual' === $method ) {
+				// manually selected events, returns an array of events
+				$metabox_item_ids = $metabox_fields['metabox_events_selection_manual'];
+	
+			} else {
+				// select latest events for $current_community_taxid
+				// _event_start_date is a meta field for the events post type
+				// this query selects future events for the $current_community_taxid
+				$currentdate = date( "Y-m-d" );
+				$args        = array(
+					'posts_per_page' => $maxnr,
+					'post_type'      => EM_POST_TYPE_EVENT,
+					'meta_key'       => '_event_start_date',
+					'orderby'        => 'meta_value_num',
+					'post_status'    => 'publish',
+					'order'          => 'ASC', // order by start date ascending
+					'fields'         => 'ids', // only return IDs
+					'tax_query'      => array(
+						array(
+							'taxonomy' => GC_COMMUNITY_TAX,
+							'field'    => 'term_id',
+							'terms'    => $current_community_term->term_id,
+						)
 					),
-				)
-			);
-			$query_items = new WP_Query( $args );
+					'meta_query'     => array(
+						array(
+							'key'     => '_event_start_date',
+							'value'   => $currentdate,
+							'compare' => '>=',
+							'type'    => 'DATE',
+						),
+					)
+				);
+				$query_items = new WP_Query( $args );
 
-			if ( $query_items->have_posts() ) {
-				// we only use post ids for the $metabox_item_ids array
-				$metabox_item_ids = $query_items->posts;
+				if ( $query_items->have_posts() ) {
+					// we only use post ids for the $metabox_item_ids array
+					$metabox_item_ids = $query_items->posts;
+				}
+
+				// ensure to reset the main query to original main query
+				wp_reset_query();
 			}
-
-			// ensure to reset the main query to original main query
-			wp_reset_query();
 
 			if ( $metabox_item_ids ) {
 				// we have events
