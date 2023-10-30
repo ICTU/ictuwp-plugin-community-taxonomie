@@ -328,11 +328,6 @@ if ( $current_community_term && ! is_wp_error( $current_community_term ) ) {
 	/**
 	 * Contact form box
 	 * (actually it's a Gravity Forms form)
-	 * 
-	 * $context['metabox_contactform'] is an Array() with:
-	 * - $context['metabox_contactform]['form']
-	 * - $context['metabox_contactform]['title']
-	 * - $context['metabox_contactform]['description']
 	 * ----------------------------- */
 	$metabox_contactform_id = get_field( 'metabox_contactform_id' );
 	if ( $metabox_contactform_id ) {
@@ -340,21 +335,7 @@ if ( $current_community_term && ! is_wp_error( $current_community_term ) ) {
 		$parsed_blocks      = do_blocks( $gravityforms_block );
 
 		if ( $parsed_blocks ) {
-			$context['metabox_contactform'] = [];
-			$context['metabox_contactform']['form'] = $parsed_blocks;
-
-			// We have a form, now try and get the form title
-			// and description from the MetaBox fields
-			$metabox_contactform_title       = get_field( 'metabox_contactform_title' );
-			$metabox_contactform_description = get_field( 'metabox_contactform_description' );
-
-			if ( $metabox_contactform_title ) {
-				$context['metabox_contactform']['title'] = $metabox_contactform_title ;
-			}
-
-			if ( $metabox_contactform_description ) {
-				$context['metabox_contactform']['description'] = $metabox_contactform_description ;
-			}
+			$context['metabox_contactform'] = $parsed_blocks;
 		}
 	}
 
