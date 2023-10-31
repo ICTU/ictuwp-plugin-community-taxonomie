@@ -8,8 +8,8 @@
  * Plugin Name:         ICTU / Gebruiker Centraal / Community taxonomie
  * Plugin URI:          https://github.com/ICTU/ictuwp-plugin-community-taxonomie
  * Description:         Plugin voor het aanmaken van de 'community'-taxonomie
- * Version:             1.4.1
- * Version description: Update cx visual
+ * Version:             1.4.2
+ * Version description: Rename `colorscheme` to `palette` in $context
  * Author:              David Hund
  * Author URI:          https://github.com/ICTU/ictuwp-plugin-community-taxonomie/
  * License:             GPL-3.0+
