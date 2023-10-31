@@ -69,14 +69,12 @@ if ( $current_community_term && ! is_wp_error( $current_community_term ) ) {
 	if ( $current_community_term_fields ) {
 		// We have some custom ACF fields for this Term
 
-		// If we have a colorscheme:
+		// If we have a palette:
 		if ( isset( $current_community_term_fields['community_taxonomy_colorscheme'] ) ) {
 			// .. store it in $context
-			$context['colorscheme'] = $current_community_term_fields['community_taxonomy_colorscheme'];
-			// // .. enqueue colorscheme CSS
-			// wp_enqueue_style( $context['colorscheme'] . '-theme', get_stylesheet_directory_uri() . '/assets/css/' . $context['colorscheme'] . '-theme.css', ['gc-flavor'], 'doit', 'all' );
+			$context['palette'] = $current_community_term_fields['community_taxonomy_colorscheme'];
 			// .. update body class
-			$context['body_class'] = ( $context['body_class'] ?: '' ) . ' colorscheme--' . $context['colorscheme'];
+			$context['body_class'] = ( $context['body_class'] ?: '' ) . ' palette--' . $context['palette'];
 		}
 
 		// If we have a visual, store it in $context
@@ -101,21 +99,13 @@ if ( $current_community_term && ! is_wp_error( $current_community_term ) ) {
 	}
 
 	// // Fallback: Term COLORSCHEME
-	// if ( ! array_key_exists( 'colorscheme', $context ) && function_exists( 'gc_get_colorschemes' ) ) {
+	// if ( ! array_key_exists( 'palette', $context ) && function_exists( 'gc_get_colorschemes' ) ) {
 	// 	$available_color_themes = gc_get_colorschemes();
-	// 	$context['colorscheme'] = $available_color_themes ? reset( $available_color_themes ) : 'green';
+	// 	$context['palette'] = $available_color_themes ? reset( $available_color_themes ) : 'green';
 	// }
 
 	// CONTENT
 	// -----------------------------
-
-	// // move content from editor to metabox_freehandblocks
-	// $blocks = parse_blocks( $timber_post->post_content );
-	// foreach ( $blocks as $block ) {
-	// 	if ( isset( $block['blockName'] ) && $block['blockName'] !== null ) {
-	// 		$context['metabox_content'] = ( $context['metabox_content'] ?? '' ) . render_block( $block );
-	// 	}
-	// }
 
 	// Page title is taken from term name
 	// -----------------------------
