@@ -316,6 +316,34 @@ if ( $current_community_term && ! is_wp_error( $current_community_term ) ) {
 	}
 
 	/**
+	 * 50 - profiles box
+	 * ----------------------------- */
+	// name of field is 'group_profiles', not 'profiles', as to avoid possible conflicts with function 'gc_get_profiles'
+	// (located at [theme]]/includes/post_types/profile-post-type.php )
+	$metabox_profiles = get_field( 'group_profiles' );
+
+	if ( $metabox_profiles && 'ja' === $metabox_profiles['metabox_profiles_show_or_not'] ) {
+
+		$context['metabox_profiles']          = [];
+		$context['metabox_profiles']['title'] = $metabox_profiles['metabox_profiles_title'] ?: _x( 'Meer weten over deze community?', 'default title for profiles', 'gctheme' );
+
+		if ( function_exists( 'gc_get_profiles' ) ) {
+			$array_profiles = array();
+			foreach ( $metabox_profiles['metabox_profiles_linked_profiles'] as $profile ) {
+				// pass on the profile in rather specific date structure as required by gc_get_profiles
+				$item                  = array();
+				$item['profile']       = array();
+				$item['profile'][]     = $profile;
+				$item['profile_label'] = '';
+				$array_profiles[] = $item;
+			}
+			$context['metabox_profiles']['profiles'] = gc_get_profiles( array( 'profiles' => $array_profiles ) );
+
+		}
+
+	}
+
+	/**
 	 * Contact form box
 	 * (actually it's a Gravity Forms form)
 	 * ----------------------------- */
