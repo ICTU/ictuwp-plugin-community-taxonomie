@@ -12,10 +12,11 @@ $timber_post = new Timber\Post();
 $current_community_taxid = get_current_community_tax();
 $current_community_term  = get_term_by( 'id', $current_community_taxid, GC_COMMUNITY_TAX );
 
-$context               = Timber::context();
-$context['post']       = $timber_post;
-$context['modifier']   = 'community-detail';
-$context['is_unboxed'] = true;
+$context                = Timber::context();
+$context['post']        = $timber_post;
+$context['modifier']     = 'community-detail';
+$context['is_unboxed']  = true;
+$context['show_author'] = false;
 
 if ( $current_community_term && ! is_wp_error( $current_community_term ) ) {
 	// Update body class
