@@ -155,7 +155,7 @@ if ( $current_community_term && ! is_wp_error( $current_community_term ) ) {
 					'posts_per_page' => $maxnr,
 					'post_type'      => EM_POST_TYPE_EVENT,
 					'meta_key'       => '_event_start_date',
-					'orderby'        => 'meta_value_num',
+					'orderby'        => 'meta_value',
 					'post_status'    => 'publish',
 					'order'          => 'ASC', // order by start date ascending
 					'fields'         => 'ids', // only return IDs
