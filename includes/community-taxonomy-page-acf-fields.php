@@ -28,7 +28,7 @@ function gc_community_admin_scripts() {
 // Add Custom ACF MetaBox for coupling a Community Term to a Page
 acf_add_local_field_group( array(
 	'key' => 'group_6526b1c486f7e',
-	'title' => 'Community detail: selecteer community',
+	'title' => 'Metabox: selecteer community',
 	'fields' => array(
 		array(
 			'key' => 'field_6526b1c436369',
@@ -36,7 +36,7 @@ acf_add_local_field_group( array(
 			'name' => 'community_detail_select_community_term',
 			'aria-label' => '',
 			'type' => 'taxonomy',
-			'instructions' => 'Als je deze pagina straks bekijkt, zul je zien dat de paginatitel wordt vervangen door de naam van de community. Ook de kleuren en visual worden overgenomen vanuit de instellingen van de community die je kiest.',
+			'instructions' => 'Als je deze pagina straks bekijkt, zul je zien dat de kleuren en visual worden overgenomen vanuit de instellingen van de community die je kiest.',
 			'required' => 1,
 			'conditional_logic' => 0,
 			'wrapper' => array(
@@ -53,7 +53,7 @@ acf_add_local_field_group( array(
 			'allow_null' => 0,
 			'bidirectional' => 1,
 			'bidirectional_target' => array(
-				0 => 'field_654a3ea04e2ea',
+				0 => 'field_654a52adade74',
 			),
 			'multiple' => 0,
 		),
@@ -77,4 +77,3 @@ acf_add_local_field_group( array(
 	'description' => '',
 	'show_in_rest' => 0,
 ) );
-

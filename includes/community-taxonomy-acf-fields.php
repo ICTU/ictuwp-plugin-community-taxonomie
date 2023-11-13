@@ -91,11 +91,39 @@ if ( function_exists( 'gc_get_colorschemes' ) ) {
 
 // Add the field group
 acf_add_local_field_group( array(
-	'key' => 'group_gc_community_taxonomy',
+	'key' => 'group_654a4b2352a09',
 	'title' => 'GC - Community taxonomy',
 	'fields' => array(
 		array(
-			'key' => 'field_gc_community_taxonomy_colorscheme',
+			'key' => 'field_654a52adade74',
+			'label' => 'Communitypagina',
+			'name' => 'community_taxonomy_page',
+			'aria-label' => '',
+			'type' => 'post_object',
+			'instructions' => 'Deze pagina zal worden getoond als een overzichtspagina met alle informatie over de community.',
+			'required' => 1,
+			'conditional_logic' => 0,
+			'wrapper' => array(
+				'width' => '',
+				'class' => '',
+				'id' => '',
+			),
+			'post_type' => array(
+				0 => 'page',
+			),
+			'post_status' => '',
+			'taxonomy' => '',
+			'return_format' => 'id',
+			'multiple' => 0,
+			'allow_null' => 0,
+			'bidirectional' => 1,
+			'bidirectional_target' => array(
+				0 => 'field_6526b1c436369',
+			),
+			'ui' => 1,
+		),
+		array(
+			'key' => 'field_654a4b24fc3cd',
 			'label' => 'Colorscheme',
 			'name' => 'community_taxonomy_colorscheme',
 			'aria-label' => '',
@@ -117,7 +145,7 @@ acf_add_local_field_group( array(
 			'save_other_choice' => 0,
 		),
 		array(
-			'key' => 'field_gc_community_taxonomy_visual',
+			'key' => 'field_654a4be4fc3ce',
 			'label' => 'Visual',
 			'name' => 'community_taxonomy_visual',
 			'aria-label' => '',
@@ -150,7 +178,7 @@ acf_add_local_field_group( array(
 			'save_other_choice' => 0,
 		),
 		array(
-			'key' => 'field_gc_community_taxonomy_link',
+			'key' => 'field_654a4c2afc3cf',
 			'label' => 'Link',
 			'name' => 'community_taxonomy_link',
 			'aria-label' => '',
@@ -172,60 +200,6 @@ acf_add_local_field_group( array(
 				'param' => 'taxonomy',
 				'operator' => '==',
 				'value' => GC_COMMUNITY_TAX,
-			),
-		),
-	),
-	'menu_order' => 0,
-	'position' => 'normal',
-	'style' => 'default',
-	'label_placement' => 'top',
-	'instruction_placement' => 'label',
-	'hide_on_screen' => '',
-	'active' => true,
-	'description' => '',
-	'show_in_rest' => 0,
-) );
-
-// Select page for this taxonomy term:
-acf_add_local_field_group( array(
-	'key' => 'group_654a3ea00532c',
-	'title' => '(!!) GC - Community taxonomy - pagina',
-	'fields' => array(
-		array(
-			'key' => 'field_654a3ea04e2ea',
-			'label' => 'Communitypagina',
-			'name' => 'community_taxonomy_page',
-			'aria-label' => '',
-			'type' => 'post_object',
-			'instructions' => 'Deze pagina zal worden getoond als een overzichtspagina met alle informatie over de community.',
-			'required' => 1,
-			'conditional_logic' => 0,
-			'wrapper' => array(
-				'width' => '',
-				'class' => '',
-				'id' => '',
-			),
-			'post_type' => array(
-				0 => 'page',
-			),
-			'post_status' => '',
-			'taxonomy' => '',
-			'return_format' => 'id',
-			'multiple' => 0,
-			'allow_null' => 0,
-			'bidirectional' => 1,
-			'bidirectional_target' => array(
-				0 => 'field_6526b1c436369',
-			),
-			'ui' => 1,
-		),
-	),
-	'location' => array(
-		array(
-			array(
-				'param' => 'taxonomy',
-				'operator' => '==',
-				'value' => 'community',
 			),
 		),
 	),
