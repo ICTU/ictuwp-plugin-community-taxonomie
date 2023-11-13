@@ -3,9 +3,10 @@ Plugin voor het aanmaken van de 'community'-taxonomie
 
 
 ## Current version:
-* 1.4.4 - Fixed sorting bug for events list
+* 1.4.5 - Added 3 community Visuals. Update visual name regex.
 
 ## Version history
+* 1.4.5 - Added 3 community Visuals. Update visual name regex.
 * 1.4.4 - Fixed sorting bug for events list
 * 1.4.3 - Add `group_profiles` to  $context
 * 1.4.2 - Rename `colorscheme` to `palette` in $context
