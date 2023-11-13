@@ -3,10 +3,10 @@ Plugin voor het aanmaken van de 'community'-taxonomie
 
 
 ## Current version:
-* 1.4.3 - Fixed sorting bug for events list
+* 1.4.3 - Add `group_profiles` to  $context
 
 ## Version history
-* 1.4.3 - Fixed sorting bug for events list
+* 1.4.3 - Add `group_profiles` to  $context
 * 1.4.2 - Rename `colorscheme` to `palette` in $context
 * 1.4.1 - Update cx visual
 * 1.4.0 - Remove contactform_title and _description

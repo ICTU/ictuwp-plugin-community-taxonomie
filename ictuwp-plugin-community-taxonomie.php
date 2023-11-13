@@ -9,7 +9,7 @@
  * Plugin URI:          https://github.com/ICTU/ictuwp-plugin-community-taxonomie
  * Description:         Plugin voor het aanmaken van de 'community'-taxonomie
  * Version:             1.4.3
- * Version description: Fixed sorting bug for events list
+ * Version description: Add `group_profiles` to  $context
  * Author:              David Hund
  * Author URI:          https://github.com/ICTU/ictuwp-plugin-community-taxonomie/
  * License:             GPL-3.0+
