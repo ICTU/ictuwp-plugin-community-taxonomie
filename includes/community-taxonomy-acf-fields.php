@@ -47,11 +47,13 @@ if( $available_visuals ) {
 			$visual_filename = preg_replace( '/.*\/assets\/images\//i', '', $val );
 
 			if ( $visual_filename ) {
-	
+
 				// $visual_filekey = str_replace( array( 'c-', '.svg' ), '', $visual_filename );
 				// $visuals[$visual_filekey] = $visual_filename;
 
-				$visual_label = ucwords( str_replace( array( 'c-', '.svg' ), '', $visual_filename ) );
+				$visual_label = str_replace( array( 'c-', '.svg' ), '', $visual_filename );
+				$visual_label = str_replace( '-', ' ', $visual_label );
+				$visual_label = ucwords( $visual_label );
 
 				// Specific Exceptions
 				// 'Default' => 'Standaard',
@@ -62,7 +64,7 @@ if( $available_visuals ) {
 				$visuals[$visual_filename] = addslashes( sprintf( $VISUALS_BASE_IMG, $visual_filename, $visual_label ) );
 
 			}
-	
+
 		}
 
 	}
@@ -245,7 +247,7 @@ function gc_add_tax_admin_css () {
 			foreach ( $available_color_themes as $key => $val ) {
 			$css .= '.swatch--' . $key . '::before { background-image: linear-gradient(-90deg, ' . $val['primary']['color'] . ' 30%, ' . $val['secondary']['color'] . ' 30%); }';
 		}
-	
+
 	}
 
 	wp_add_inline_style( 'acf-global', trim($css) );
