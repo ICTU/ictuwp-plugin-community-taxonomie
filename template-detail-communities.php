@@ -14,7 +14,7 @@ $current_community_term  = get_term_by( 'id', $current_community_taxid, GC_COMMU
 
 $context                = Timber::context();
 $context['post']        = $timber_post;
-$context['modifier']     = 'community-detail';
+$context['modifier']    = 'community-detail';
 $context['is_unboxed']  = true;
 $context['show_author'] = false;
 
@@ -115,18 +115,40 @@ if ( $current_community_term && ! is_wp_error( $current_community_term ) ) {
 	if ( empty( $context['intro'] ) ) {
 		$context['intro'] = wpautop( $current_community_term->description );
 	}
-	
+
 	/**
-	 *  Intro Text (Metabox)
+	 *  (10) Intro Text (Metabox)
 	 * ----------------------------- */
 	$metabox_intro_text = get_field( 'metabox_intro_text' );
 	if ( ! empty( $metabox_intro_text ) ) {
 		$context['metabox_intro_text'] = $metabox_intro_text;
 	}
 
+	/**
+	 *  (20) Infoblokken (USP)
+	 * ----------------------------- */
+	$metabox_fields = get_field( 'icoonblokken' );
+	if ( ! empty( $metabox_fields ) ) {
+		if ( $metabox_fields && 'ja' === $metabox_fields['metabox_icoonblokken_show_or_not'] ) {
+			$metabox_fields_items = $metabox_fields['metabox_icoonblokken_items'];
+
+			foreach ( $metabox_fields_items as $block ) {
+
+				$item                                       = array();
+				$item['icon']                               = $block['icon'];
+				$item['title']                              = $block['title'];
+				$item['description']                        = $block['description'];
+				$context['metabox_icoonblokken']['items'][] = $item;
+			}
+
+			$context['metabox_icoonblokken']['columncounter'] = count( $context['metabox_icoonblokken']['items'] );
+
+		}
+	}
+
 
 	/**
-	 *  Events box
+	 *  (30) Events box
 	 * ----------------------------- */
 	// Only show events if Events Manager plugin is active
 	if ( class_exists( 'EM_Events' ) ) {
@@ -143,7 +165,7 @@ if ( $current_community_term && ! is_wp_error( $current_community_term ) ) {
 			if ( 'manual' === $method ) {
 				// manually selected events, returns an array of events
 				$metabox_item_ids = $metabox_fields['metabox_events_selection_manual'];
-	
+
 			} else {
 				// select latest events for $current_community_taxid
 				// _event_start_date is a meta field for the events post type
@@ -211,7 +233,7 @@ if ( $current_community_term && ! is_wp_error( $current_community_term ) ) {
 	}
 
 	/**
-	 * Posts box
+	 * (40) Posts box
 	 * ----------------------------- */
 	$metabox_fields = get_field( 'berichten' );
 
@@ -315,7 +337,7 @@ if ( $current_community_term && ! is_wp_error( $current_community_term ) ) {
 	}
 
 	/**
-	 * 50 - profiles box
+	 * (50) profiles box
 	 * ----------------------------- */
 	// name of field is 'group_profiles', not 'profiles', as to avoid possible conflicts with function 'gc_get_profiles'
 	// (located at [theme]]/includes/post_types/profile-post-type.php )
@@ -334,7 +356,7 @@ if ( $current_community_term && ! is_wp_error( $current_community_term ) ) {
 				$item['profile']       = array();
 				$item['profile'][]     = $profile;
 				$item['profile_label'] = '';
-				$array_profiles[] = $item;
+				$array_profiles[]      = $item;
 			}
 			$context['metabox_profiles']['profiles'] = gc_get_profiles( array( 'profiles' => $array_profiles ) );
 
@@ -343,7 +365,7 @@ if ( $current_community_term && ! is_wp_error( $current_community_term ) ) {
 	}
 
 	/**
-	 * Contact form box
+	 * (60) Contact form box
 	 * (actually it's a Gravity Forms form)
 	 * ----------------------------- */
 	$metabox_contactform_id = get_field( 'metabox_contactform_id' );
@@ -355,6 +377,12 @@ if ( $current_community_term && ! is_wp_error( $current_community_term ) ) {
 			$context['metabox_contactform'] = $parsed_blocks;
 		}
 	}
+
+	/**
+	 * (70) Partners
+	 * tba
+	 * ----------------------------- */
+
 
 }
 
