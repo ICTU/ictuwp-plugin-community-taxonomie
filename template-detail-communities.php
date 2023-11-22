@@ -135,13 +135,11 @@ if ( $current_community_term && ! is_wp_error( $current_community_term ) ) {
 			foreach ( $metabox_fields_items as $block ) {
 
 				$item                                       = array();
-				$item['icon']                               = $block['icon'];
+				$item['modifier']                            = $block['icon'];
 				$item['title']                              = $block['title'];
-				$item['description']                        = $block['description'];
+				$item['content']                            = $block['description'];
 				$context['metabox_icoonblokken']['items'][] = $item;
 			}
-
-			$context['metabox_icoonblokken']['columncounter'] = count( $context['metabox_icoonblokken']['items'] );
 
 		}
 	}
