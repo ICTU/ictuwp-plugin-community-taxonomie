@@ -136,9 +136,9 @@ if ( $current_community_term && ! is_wp_error( $current_community_term ) ) {
 
 				$item = array();
 				if ( isset( $block['title'] ) && $block['title'] && isset( $block['description'] ) && $block['description'] ) {
-					$item['modifier']                           = $block['icon'];
+					$item['modifier']                            = 'icon-' . $block['icon'];
 					$item['title']                              = $block['title'];
-					$item['content']                            = $block['description'];
+					$item['content']                            = wpautop( $block['description'] );
 					$context['metabox_icoonblokken']['items'][] = $item;
 				}
 
