@@ -1,6 +1,6 @@
 <?php
 /**
- * Template Name: Template Detail Communities
+ * Template Name: [Community] detailpagina
  *
  * @package    WordPress
  * @subpackage Timber
