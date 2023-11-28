@@ -7,21 +7,13 @@
  * @since      Timber 0.1
  */
 
-$context              = Timber::context();
-$timber_post          = new Timber\Post();
-$context['post']      = $timber_post;
-$context['modifier']   = 'community-overview';
-$context['item_type'] = 'community-overview'; // Pass item_type to grid section (adds ID to grid)
+$context                       = Timber::context();
+$context['post']               = new Timber\Post();
+$context['modifier']            = 'community-overview';
+$context['item_type']          = 'community-overview'; // Pass item_type to grid section (adds ID to grid)
+$context['has_centered_intro'] = false;
 
 // TODO: implement Query Filters ($context['query_filters']) (like template-instumenten-tt.php)?
-
-///**
-// * Fill Timber $context with available page/post Blocks/Metaboxes
-// * @see /includes/gc-fill-context-with-acf-fields.php
-// */
-//if ( function_exists( 'gc_fill_context_with_acf_fields' ) ) {
-//	$context = gc_fill_context_with_acf_fields( $context );
-//}
 
 /**
  * Add communities (terms in Community taxonomy)
@@ -34,55 +26,63 @@ if ( function_exists( 'fn_ictu_community_get_community_terms' ) ) {
 		$item = array(
 			// type, translates to card-type--{type}
 			'type'  => 'community',
+			// Title defaults to term name
 			'title' => $community->name,
+			// Descr defaults to term description
 			'descr' => $community->description,
-			// IGNORE Archive url for now..
-			// 'url'   => $term_archive_url
 		);
 
 		// Setup image to use in Card
-		$landingpage_featured_image = null;
+		$item_img = null;
 
 		// Linked Landingpage
 		if ( $community->community_taxonomy_page ) {
-			$landingpage           = get_post( $community->community_taxonomy_page );
-
-			// Override: card Title from page link
-			$item['title']         = get_the_title( $landingpage->ID );
-
-			// Override: card Description from page intro
-			$landingpage_intro     = get_field( 'post_inleiding', $landingpage->ID );
-			if ( $landingpage_intro ) {
-				$item['descr']     = $landingpage_intro;
-			}
-
-			// Set Card url from page link
-			$item['url']           = get_page_link( $landingpage );
-
-			// Set Card image from page thumbnail
-			$landingpage_thumbnail = get_the_post_thumbnail_url( $landingpage->ID, 'image-16x9' );
-			if ( $landingpage_thumbnail ) {
-				$landingpage_featured_image = $landingpage_thumbnail;
+			// Fetch page from ID
+			$item_page = get_post( $community->community_taxonomy_page );
+			// If no ID or invalid, get_post _could_ return the *current* page..
+			if ( $item_page instanceof WP_Post ) {
+				$item_page_id = $item_page->ID;
+				// .. so check if it has the correct template
+				$item_page_template = get_post_meta( $item_page_id, '_wp_page_template', true );
+				if ( GC_COMMUNITY_TAX_DETAIL_TEMPLATE === $item_page_template ) {
+					// Set Card image from page thumbnail
+					$item_img      = get_the_post_thumbnail_url( $item_page, 'image-16x9' ) ?: $item_img;
+					// Override: card Title from page link
+					$item['title'] = get_the_title( $item_page );
+					// Set Card url from page link
+					$item['url']   = get_page_link( $item_page );
+					// Override: card Description from page intro
+					// - the page excerpt (if set)
+					// - else: the term descr (set by default, could be empty)
+					// - else: the page 00 - intro
+					$item_page_excerpt   = get_the_excerpt( $item_page );
+					$item_page_inleiding = get_field( 'post_inleiding', $item_page );
+					if ( ! empty( $item_page_excerpt ) ) {
+						$item['descr'] = $item_page_excerpt;
+					} elseif ( empty( $item['descr'] && ! empty( $item_page_inleiding ) ) ) {
+						$item['descr'] = $item_page_inleiding;
+					}
+				}
 			}
 		}
 
 		// Image:
 		if ( $community->community_taxonomy_image ) {
-			$landingpage_featured_image = '<img src="' . $community->community_taxonomy_image['sizes']['image-16x9'] . '" alt=""/>';
+			$item_img = '<img src="' . $community->community_taxonomy_image['sizes']['image-16x9'] . '" alt=""/>';
 		}
 
 		// Visual
 		if ( $community->community_taxonomy_visual ) {
 			$item['visual'] = $community->community_taxonomy_visual;
 			// Use visual as featured image if no other image is set
-			if ( ! $landingpage_featured_image ) {
-				$landingpage_featured_image = $community->community_taxonomy_visual;
+			if ( ! $item_img ) {
+				$item_img = $community->community_taxonomy_visual;
 			}
 		}
 
 		// Finally use preferred image for card
-		if ( $landingpage_featured_image ) {
-			$item['img'] = '<img src="' . $landingpage_featured_image . '" alt=""/>';
+		if ( $item_img ) {
+			$item['img'] = '<img src="' . $item_img . '" alt=""/>';
 		}
 
 		// Colorscheme:
