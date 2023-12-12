@@ -103,7 +103,7 @@ acf_add_local_field_group( array(
 			'aria-label' => '',
 			'type' => 'post_object',
 			'instructions' => 'Deze pagina zal worden getoond als een overzichtspagina met alle informatie over de community.',
-			'required' => 1,
+			'required' => 0,
 			'conditional_logic' => 0,
 			'wrapper' => array(
 				'width' => '',

@@ -8,8 +8,8 @@
  * Plugin Name:         ICTU / Gebruiker Centraal / Community taxonomie
  * Plugin URI:          https://github.com/ICTU/ictuwp-plugin-community-taxonomie
  * Description:         Plugin voor het aanmaken van de 'community'-taxonomie
- * Version:             1.4.6
- * Version description: Added Community Detail Textblocks With Icon.
+ * Version:             1.5.0
+ * Version description: Added Community Overview.
  * Author:              David Hund
  * Author URI:          https://github.com/ICTU/ictuwp-plugin-community-taxonomie/
  * License:             GPL-3.0+
@@ -24,16 +24,7 @@ if ( ! defined( 'WPINC' ) ) {
 }
 
 //========================================================================================================
-
-// Dutch slug for taxonomy
-$slug = 'community';
-
-if ( get_bloginfo( 'language' ) !== 'nl-NL' ) {
-	// non Dutch slug for taxonomy
-	$slug = 'community';
-}
-
-defined( 'GC_COMMUNITY_TAX' ) or define( 'GC_COMMUNITY_TAX', $slug );
+defined( 'GC_COMMUNITY_TAX' ) or define( 'GC_COMMUNITY_TAX', 'community' );
 defined( 'GC_COMMUNITY_TAX_OVERVIEW_TEMPLATE' ) or define( 'GC_COMMUNITY_TAX_OVERVIEW_TEMPLATE', 'template-overview-communities.php' );
 defined( 'GC_COMMUNITY_TAX_DETAIL_TEMPLATE' ) or define( 'GC_COMMUNITY_TAX_DETAIL_TEMPLATE', 'template-detail-communities.php' );
 defined( 'GC_COMMUNITY_TAX_ASSETS_PATH' ) or define( 'GC_COMMUNITY_TAX_ASSETS_PATH' , '/wp-content/plugins/ictuwp-plugin-community-taxonomie/assets' );
@@ -130,7 +121,6 @@ if ( ! class_exists( 'ICTU_GC_community_taxonomy' ) ) :
 			$file       = '';
 			$pluginpath = plugin_dir_path( __FILE__ );
 
-
 			if ( $post ) {
 				// Do we have a post of whatever kind at hand?
 				// Get template name; this will only work for pages, obviously
@@ -144,13 +134,8 @@ if ( ! class_exists( 'ICTU_GC_community_taxonomy' ) ) :
 					// exit with the already set template
 					return $template;
 				}
-
-			} elseif ( is_tax( GC_COMMUNITY_TAX ) ) {
-				// Are we dealing with a term for the GC_COMMUNITY_TAX taxonomy?
-				$file = $pluginpath . 'taxonomy-community.php';
-
 			} else {
-				// Not a post, not a term, return the template
+				// Not a post, return the template
 				return $template;
 			}
 
@@ -305,19 +290,15 @@ endif;
 
 //========================================================================================================
 
-if ( defined( GC_COMMUNITY_TAX ) or taxonomy_exists( GC_COMMUNITY_TAX ) ) {
+/**
+ * Load plugin textdomain.
+ * only load translations if we can safely assume the taxonomy is active
+ */
+add_action( 'init', 'fn_ictu_community_load_plugin_textdomain' );
 
-	/**
-	 * Load plugin textdomain.
-	 * only load translations if we can safely assume the taxonomy is active
-	 */
-	add_action( 'init', 'fn_ictu_community_load_plugin_textdomain' );
+function fn_ictu_community_load_plugin_textdomain() {
 
-	function fn_ictu_community_load_plugin_textdomain() {
-
-		load_plugin_textdomain( 'gctheme', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
-
-	}
+	load_plugin_textdomain( 'gctheme', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
 
 }
 
