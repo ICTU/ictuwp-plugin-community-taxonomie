@@ -166,6 +166,11 @@ function fn_ictu_community_get_community_terms( $community_name = null, $term_ar
 						$val = sprintf( '%s/images/%s', GC_COMMUNITY_TAX_ASSETS_PATH, $val );
 					}
 
+					// Add extra `url` property to Term if we have a linked Page
+					if( $key == 'community_taxonomy_page' && ! empty( $val ) ) {
+						$community_term->url = get_permalink( $val );
+					}
+
 					$community_term->$key = $val;
 				}
 			}
