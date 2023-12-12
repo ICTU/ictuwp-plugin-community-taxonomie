@@ -55,12 +55,11 @@ if ( function_exists( 'fn_ictu_community_get_community_terms' ) ) {
 					// - the page excerpt (if set)
 					// - else: the term descr (set by default, could be empty)
 					// - else: the page 00 - intro
-					$item_page_excerpt   = get_the_excerpt( $item_page );
-					$item_page_inleiding = get_field( 'post_inleiding', $item_page );
-					if ( ! empty( $item_page_excerpt ) ) {
-						$item['descr'] = $item_page_excerpt;
-					} elseif ( empty( $item['descr'] && ! empty( $item_page_inleiding ) ) ) {
-						$item['descr'] = $item_page_inleiding;
+					if ( $item_page->post_excerpt ) {
+						// only use the excerpt if the field is actually filled
+						$item['descr'] = get_the_excerpt( $item_page );
+					} elseif ( get_field( 'post_inleiding', $item_page ) ) {
+						$item['descr'] = get_field( 'post_inleiding', $item_page );
 					}
 				}
 			}
