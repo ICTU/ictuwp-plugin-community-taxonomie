@@ -126,8 +126,18 @@ function fn_ictu_community_get_community_terms( $community_name = null, $term_ar
 	$community_query    = is_array( $term_args ) ? $term_args : [
 		'taxonomy'   => $community_taxonomy,
 		// We also want Terms with NO linked content, in this case
-		'hide_empty' => false
+		'hide_empty' => false,
+		'orderby' => 'name',
+		'order' => 'ASC',
 	];
+
+	// NOTE:
+	// We want to order the Communities alphabetically
+	// based on their name. But we use the linked Page Title
+	// for the actual display. So really, we expect to order
+	// based on Term -> Page -> Title
+	// This is why we need to re-order the array
+	// in template-overview-communities.php
 
 	// Query specific term name
 	if ( ! empty( $community_name ) ) {
