@@ -3,9 +3,10 @@ Plugin voor het aanmaken van de 'community'-taxonomie
 
 
 ## Current version:
-* 1.5.0 - Added Community Overview.
+* 1.5.1 - Added Community Term `url` property
 
 ## Version history
+* 1.5.1 - Added Community Term `url` property
 * 1.5.0 - Added Community Overview.
 * 1.4.6 - Added Community Detail Textblocks With Icon.
 * 1.4.5 - Added 3 community Visuals. Update visual name regex.

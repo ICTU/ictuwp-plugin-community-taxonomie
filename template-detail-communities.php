@@ -88,7 +88,6 @@ if ( $current_community_term && ! is_wp_error( $current_community_term ) ) {
 		}
 
 		// If we have an extra Community Link
-		// we redirect to that URL instead of loading our detail template
 		if ( isset( $current_community_term_fields['community_taxonomy_link'] ) ) {
 			$context['community_link'] = $current_community_term_fields['community_taxonomy_link'];
 		}
@@ -111,7 +110,7 @@ if ( $current_community_term && ! is_wp_error( $current_community_term ) ) {
 	// text for 'inleiding' is taken from term description
 	// -----------------------------
 	// $timber_post->post_content = $current_community_term->description;
-	// Use Intro instead?!
+	// Use Excerpt instead?! Fall back to Term description if no Excerpt is set?
 	if ( empty( $context['intro'] ) ) {
 		$context['intro'] = wpautop( $current_community_term->description );
 	}
