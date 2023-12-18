@@ -86,6 +86,7 @@ if ( ! class_exists( 'ICTU_GC_community_taxonomy' ) ) :
 			add_filter( 'wpseo_breadcrumb_links', array( $this, 'fn_ictu_community_yoast_filter_breadcrumb' ) );
 
 			// check if the term has detail page attached
+			// @TODO: Requested but does not yet work correctly. See GC-587
 			// add_action( 'template_redirect', array( $this, 'fn_ictu_community_check_redirect' ) );
 
 		}
@@ -250,6 +251,8 @@ if ( ! class_exists( 'ICTU_GC_community_taxonomy' ) ) :
 
 		/**
 		 * Checks if the community term is linked to a page and redirect
+		 *
+		 * @TODO: Requested but does not yet work correctly. See GC-587
 		 *
 		 * @return: {Function|null} wp_safe_redirect when possible
 		 *
