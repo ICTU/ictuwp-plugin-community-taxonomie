@@ -16,7 +16,6 @@
  * ----------------------------------------------------- */
 
 
-
 if ( ! taxonomy_exists( GC_COMMUNITY_TAX ) ) {
 
 	// [1] Community Taxonomy Labels
@@ -127,8 +126,8 @@ function fn_ictu_community_get_community_terms( $community_name = null, $term_ar
 		'taxonomy'   => $community_taxonomy,
 		// We also want Terms with NO linked content, in this case
 		'hide_empty' => false,
-		'orderby' => 'name',
-		'order' => 'ASC',
+		'orderby'    => 'name',
+		'order'      => 'ASC',
 	];
 
 	// NOTE:
@@ -159,7 +158,7 @@ function fn_ictu_community_get_community_terms( $community_name = null, $term_ar
 				foreach ( $community_term_fields as $key => $val ) {
 
 					// Add path to image url
-					if( $key == 'community_taxonomy_visual' && defined( 'GC_COMMUNITY_TAX_ASSETS_PATH' ) ) {
+					if ( $key == 'community_taxonomy_visual' && defined( 'GC_COMMUNITY_TAX_ASSETS_PATH' ) ) {
 						// Optionally convert to img tag with:
 						//   '<img width="800" height="450" src="%s/%s" class="community-taxonomy-visual" alt="" decoding="async" loading="lazy" />',
 						// for now just return the path:
@@ -167,7 +166,7 @@ function fn_ictu_community_get_community_terms( $community_name = null, $term_ar
 					}
 
 					// Add extra `url` property to Term if we have a linked Page
-					if( $key == 'community_taxonomy_page' && ! empty( $val ) ) {
+					if ( $key == 'community_taxonomy_page' && ! empty( $val ) ) {
 						$community_term->url = get_permalink( $val );
 					}
 
@@ -207,14 +206,20 @@ function fn_ictu_community_get_post_community_terms( $post_id = null, $term_numb
 		'number'     => $term_number, // Return max $term_number Terms
 		'hide_empty' => true,
 		'parent'     => 0,
-		'fields'      => 'names' // Only return names (to use in `fn_ictu_community_get_community_terms()`)
+		'fields'     => 'names' // Only return names (to use in `fn_ictu_community_get_community_terms()`)
 	] );
+	if ( ! empty( $post_community_terms ) && ! is_wp_error( $post_community_terms ) ) {
 
-	foreach ( $post_community_terms as $_term ) {
-		$full_post_community_term = fn_ictu_community_get_community_terms( $_term );
-		if ( ! empty( $full_post_community_term ) ) {
-			$return_terms[] = $full_post_community_term[0];
+		$return_terms['title'] =  _n( 'Hoort bij de community', 'Hoort bij de community\'s', count( $post_community_terms ), 'gctheme' ) ;
+		$return_terms['items']   = array();
+
+		foreach ( $post_community_terms as $_term ) {
+			$full_post_community_term = fn_ictu_community_get_community_terms( $_term );
+			if ( ! empty( $full_post_community_term ) ) {
+				$return_terms['items'][] = $full_post_community_term[0];
+			}
 		}
+
 	}
 
 	return $return_terms;

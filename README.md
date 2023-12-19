@@ -3,9 +3,10 @@ Plugin voor het aanmaken van de 'community'-taxonomie
 
 
 ## Current version:
-* 1.5.1 - Added Community Term `url` property
+* 1.5.2 - Make title for tags component translatable. 
 
 ## Version history
+* 1.5.2 - Make title for tags component translatable. 
 * 1.5.1 - Added Community Term `url` property
 * 1.5.0 - Added Community Overview.
 * 1.4.6 - Added Community Detail Textblocks With Icon.
