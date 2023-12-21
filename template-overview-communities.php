@@ -60,6 +60,7 @@ if ( function_exists( 'fn_ictu_community_get_community_terms' ) ) {
 			'type'  => 'community',
 			// Title default: term name
 			'title' => $community->name,
+			'slug' => $community->slug,
 			// Descr default: term description
 			'descr' => $community->description,
 		);
@@ -108,6 +109,8 @@ if ( function_exists( 'fn_ictu_community_get_community_terms' ) ) {
 					$item['title'] = get_the_title( $item_page );
 					// Set Card url from page link
 					$item_url      = get_page_link( $item_page );
+					// the sort order is based on the slug of the page (which is *probably* based on the page title)
+					$item['slug'] = $item_page->post_name;
 					// Override: card Description from:
 					// - the page excerpt (if set)
 					// - else: the page 00 - intro (if set)
@@ -183,10 +186,10 @@ if ( function_exists( 'fn_ictu_community_get_community_terms' ) ) {
 
 	// NOTE [1]:
 	// Re-order the Communities alphabetically
-	// based on their linked Page Title.
+	// based on their linked slug (this is oftentimes derived from the Page Title).
 	// They were originally ordered by Term name
 	usort( $community_items, function( $a, $b ) {
-		return strcmp( strtoupper( $a['title'] ), strtoupper( $b['title'] ) );
+		return strcmp( strtoupper( $a['slug'] ), strtoupper( $b['slug'] ) );
 	} );
 
 	$context['items'] = $community_items;
