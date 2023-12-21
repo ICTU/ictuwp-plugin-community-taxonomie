@@ -35,7 +35,16 @@ if ( function_exists( 'fn_ictu_community_get_community_terms' ) ) {
 	// here, after we've retrieved the page title
 	// in the loop below.
 
-	foreach ( fn_ictu_community_get_community_terms() as $community ) {
+	// skip any community terms that do not have any content attached
+	$select_args = array(
+		'taxonomy'   => GC_COMMUNITY_TAX,
+		// NO Terms with NO linked content
+		'hide_empty' => true,
+		'orderby'    => 'name',
+		'order'      => 'ASC',
+	);
+
+	foreach ( fn_ictu_community_get_community_terms( null, $select_args ) as $community ) {
 
 		/**
 		 * $community is a WP_Term object
