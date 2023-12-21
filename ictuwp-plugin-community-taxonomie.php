@@ -8,8 +8,8 @@
  * Plugin Name:         ICTU / Gebruiker Centraal / Community taxonomie
  * Plugin URI:          https://github.com/ICTU/ictuwp-plugin-community-taxonomie
  * Description:         Plugin voor het aanmaken van de 'community'-taxonomie
- * Version:             1.5.2
- * Version description: Make title for tags component translatable. 
+ * Version:             1.5.3
+ * Version description: Reset `$template` for Community tax. Term archives.
  * Author:              David Hund
  * Author URI:          https://github.com/ICTU/ictuwp-plugin-community-taxonomie/
  * License:             GPL-3.0+
@@ -119,6 +119,18 @@ if ( ! class_exists( 'ICTU_GC_community_taxonomy' ) ) :
 		 *
 		 */
 		public function fn_ictu_community_append_template_locations( $template ) {
+
+			// For SOME reason, we still get a $post object,
+			// even if we are on a taxonomy archive page..
+			// This messes with the template selection, so we need to check for that
+			// and use the default archive template
+			// @TODO: investigate/improve this
+			if ( is_tax( GC_COMMUNITY_TAX ) ) {
+				// $term = get_queried_object();
+				return $template;
+			}
+
+			// Not a taxonomy archive page, so continue as before...
 
 			// Get global post
 			global $post;
