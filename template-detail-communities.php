@@ -379,10 +379,18 @@ if ( $current_community_term && ! is_wp_error( $current_community_term ) ) {
 	}
 
 	/**
-	 * (70) Partners
-	 * tba
+	 * (70) Partners / Logo's
+	 * (we render the gc/logos Block in Theme's community-detail.twig)
 	 * ----------------------------- */
-
+	// Require a filled in list for this section to show
+	$metabox_logos_list  = get_field( 'logos_list' );
+	if ( $metabox_logos_list ) {
+		$context['metabox_logos'] = array(
+			'title'       => get_field( 'logos_title' ),
+			'description' => get_field( 'logos_description' ),
+			'list'        => $metabox_logos_list,
+		);
+	}
 
 }
 
