@@ -3,7 +3,7 @@ Plugin voor het aanmaken van de 'community'-taxonomie
 
 
 ## Current version:
-* 1.5.4 - Added Partner (logo's) block in detail template.
+* 1.5.5 - Added category selection in automatic posts metabox.
 
 ## Version history
 * 1.5.4 - Added Partner (logo's) block in detail template.
