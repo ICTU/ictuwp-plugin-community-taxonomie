@@ -3,9 +3,10 @@ Plugin voor het aanmaken van de 'community'-taxonomie
 
 
 ## Current version:
-* 1.5.3 - Reset `$template` for Community tax. Term archives.
+* 1.5.4 - Added Partner (logo's) block in detail template.
 
 ## Version history
+* 1.5.4 - Added Partner (logo's) block in detail template.
 * 1.5.3 - Reset `$template` for Community tax. Term archives.
 * 1.5.2 - Make title for tags component translatable.
 * 1.5.1 - Added Community Term `url` property
