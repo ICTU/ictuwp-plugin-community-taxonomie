@@ -3,9 +3,10 @@ Plugin voor het aanmaken van de 'community'-taxonomie
 
 
 ## Current version:
-* 1.5.5 - Added category selection in automatic posts metabox.
+* 1.5.6 - Optimize `metabox_posts_archive_selection` for Archive Link.
 
 ## Version history
+* 1.5.5 - Added category selection in automatic posts metabox.
 * 1.5.4 - Added Partner (logo's) block in detail template.
 * 1.5.3 - Reset `$template` for Community tax. Term archives.
 * 1.5.2 - Make title for tags component translatable.
