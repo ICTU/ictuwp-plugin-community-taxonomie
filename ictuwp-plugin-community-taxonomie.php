@@ -126,18 +126,22 @@ if ( ! class_exists( 'ICTU_GC_community_taxonomy' ) ) :
 			 *
 			 * @param WP_Query $query
 			 */
-			function community_term_archive_query_posts_only( $query ) {
-				if ( ! is_admin() && $query->is_main_query() ) {
-					// Not a query for an admin page.
-					// It's the main query for a front end page of your site.
-					if ( is_tax( GC_COMMUNITY_TAX ) ) {
-						// It's the main query for a community tax term archive.
-						// Now only include POSTS
-						$query->set( 'post_type', array( 'post' ) );
-					}
-				}
-			}
-			add_action( 'pre_get_posts', 'community_term_archive_query_posts_only' );
+
+			// NOTE: not needed because we use a separate page template
+			// for the Community Taxonomy Term POST Archives
+
+			// function community_term_archive_query_posts_only( $query ) {
+			// 	if ( ! is_admin() && $query->is_main_query() ) {
+			// 		// Not a query for an admin page.
+			// 		// It's the main query for a front end page of your site.
+			// 		if ( is_tax( GC_COMMUNITY_TAX ) ) {
+			// 			// It's the main query for a community tax term archive.
+			// 			// Now only include POSTS
+			// 			$query->set( 'post_type', array( 'post' ) );
+			// 		}
+			// 	}
+			// }
+			// add_action( 'pre_get_posts', 'community_term_archive_query_posts_only' );
 
 		}
 
