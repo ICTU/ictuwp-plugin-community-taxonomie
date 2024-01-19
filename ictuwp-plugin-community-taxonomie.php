@@ -8,8 +8,8 @@
  * Plugin Name:         ICTU / Gebruiker Centraal / Community taxonomie
  * Plugin URI:          https://github.com/ICTU/ictuwp-plugin-community-taxonomie
  * Description:         Plugin voor het aanmaken van de 'community'-taxonomie
- * Version:             1.5.5
- * Version description: Added category selection in automatic posts metabox.
+ * Version:             1.5.6
+ * Version description: Optimize `metabox_posts_archive_selection` for Archive Link.
  * Author:              David Hund
  * Author URI:          https://github.com/ICTU/ictuwp-plugin-community-taxonomie/
  * License:             GPL-3.0+
@@ -88,6 +88,60 @@ if ( ! class_exists( 'ICTU_GC_community_taxonomy' ) ) :
 			// check if the term has detail page attached
 			// @TODO: Requested but does not yet work correctly. See GC-587
 			// add_action( 'template_redirect', array( $this, 'fn_ictu_community_check_redirect' ) );
+
+			// Hide the `metabox_posts_category` field for 'community' related posts
+			// (because we already filter on Community tax term)
+			add_filter( 'acf/prepare_field/name=metabox_posts_category', function( $field ) {
+				global $post;
+				if ( ! empty( $post ) ) {
+					// Check if we're currently editing a post
+					// with a Community template.
+					// If so: *disable* the category selection (return false)
+					// because we use the Community Tax...
+					$page_template = get_post_meta( $post->ID, '_wp_page_template', true );
+					if ( $page_template === GC_COMMUNITY_TAX_DETAIL_TEMPLATE ) {
+						return false;
+					}
+				}
+				return $field;
+			} );
+
+			// Update the default value of the automatic link text field from 'categorie' to 'community'
+			// add_filter( 'acf/prepare_field/name=metabox_posts_archive_selection_automatic_link_text', function( $field ) {
+			// 	if ( empty( $field['value'] ) || empty( $field['default_value'] ) ) {
+			// 		return $field;
+			// 	}
+
+			// 	if ( $field['value'] === $field['default_value'] ) {
+			// 		$new_default_value     = str_replace( 'categorie', GC_COMMUNITY_TAX, $field['default_value'] );
+			// 		$field['default_value'] = $new_default_value;
+			// 		$field['value']         = $new_default_value;
+			// 	}
+			// 	return $field;
+			// } );
+
+			/**
+			 * Filter the main query for Community Taxonomy Term Archives
+			 * Update the `post_type` to only include `post` type.
+			 *
+			 * @param WP_Query $query
+			 */
+
+			// NOTE: not needed because we use a separate page template
+			// for the Community Taxonomy Term POST Archives
+
+			// function community_term_archive_query_posts_only( $query ) {
+			// 	if ( ! is_admin() && $query->is_main_query() ) {
+			// 		// Not a query for an admin page.
+			// 		// It's the main query for a front end page of your site.
+			// 		if ( is_tax( GC_COMMUNITY_TAX ) ) {
+			// 			// It's the main query for a community tax term archive.
+			// 			// Now only include POSTS
+			// 			$query->set( 'post_type', array( 'post' ) );
+			// 		}
+			// 	}
+			// }
+			// add_action( 'pre_get_posts', 'community_term_archive_query_posts_only' );
 
 		}
 

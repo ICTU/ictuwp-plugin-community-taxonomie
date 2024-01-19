@@ -296,43 +296,39 @@ if ( $current_community_term && ! is_wp_error( $current_community_term ) ) {
 			$context['metabox_posts']['cta']         = [];
 			$context['metabox_posts']['title']       = $metabox_fields['metabox_posts_titel'] ?? '';
 			$context['metabox_posts']['description'] = $metabox_fields['metabox_posts_description'] ?? '';
-			$url                                     = $metabox_fields['metabox_posts_url_overview'] ?? [];
+			$archive_link_method                     = $metabox_fields['metabox_posts_archive_selection'] ?? [];
 
-			// Add click through link for all posts
-			if ( $url ) {
-				// manually added CTA 'overzichtslink'
-				$context['metabox_posts']['cta']['title'] = $url['title'];
-				$context['metabox_posts']['cta']['url']   = $url['url'];
-			} else {
-				// automagically add link to LLK page for posts
-				$template = 'template-llk-posts.php';
-				$pages    = get_posts( array(
-					'post_type'  => 'page',
-					'fields'     => 'ids',
-					'meta_key'   => '_wp_page_template',
-					'meta_value' => $template
-				) );
+			// $archive_link_method can be:
+			// none : Geen link
+			// automatic : Automatische link naar taxonomie archief
+			// custom : Geheel eigen link
+			if ( ! empty( $archive_link_method ) && $archive_link_method !== 'none' ) {
+				// Automatic Archive Link:
+				if ( 'automatic' === $archive_link_method ) {
+					// Based on Taxonomy (default category, but now Community), so check if it's not empty..
+					// NOTE: user could ALSO have selected a Post Category
+					// ..but we ignore this for the archive link and use the Community archive here...
+					if ( isset( $current_community_term ) && ! empty( $current_community_term->term_id ) ) {
 
-				if ( $pages && $pages[0] ) {
-					// a relevant LLK page was found
+						$metabox_posts_category_name = $current_community_term->name;
+						$metabox_posts_category_text = $metabox_fields['metabox_posts_archive_selection_automatic_link_text'] ?: _x( 'Bekijk alle berichten', 'Linktekst voor Community berichten', 'gctheme' );
+						$metabox_posts_category_link = get_term_link( (int) $current_community_term->term_id, GC_COMMUNITY_TAX );
 
-					$context['metabox_posts']['cta']['title'] = _x( 'Bekijk alle berichten', 'Linktekst voor LLK pagina met berichten', 'gctheme' );
+						// Replace placeholder with term name in automatic link text
+						$metabox_posts_category_text = sprintf( $metabox_posts_category_text, $metabox_posts_category_name );
 
-					// see if we can add GC_COMMUNITY_TAX as extra filter
-					$term_info = get_term_by( 'id', $current_community_taxid, GC_COMMUNITY_TAX );
-
-					if ( $term_info && ! is_wp_error( $term_info ) ) {
-						// append community slug to LLK link
-						// TODO: FIXME: GC_QUERYVAR_COMMUNITY is not defined?
-						$item_url_vars                          = [ ( defined( 'GC_QUERYVAR_COMMUNITY' ) ? GC_QUERYVAR_COMMUNITY : 'community' ) => $term_info->slug ];
-						$context['metabox_posts']['cta']['url'] = add_query_arg( $item_url_vars, get_permalink( $pages[0] ) );
-					} else {
-						// just use the permalink
-						$context['metabox_posts']['cta']['url'] = get_permalink( $pages[0] );
+						$context['metabox_posts']['cta']['title'] = $metabox_posts_category_text;
+						$context['metabox_posts']['cta']['url']   = $metabox_posts_category_link;
 					}
-				} else {
-					// no manual link added, no page found.
-					// so: no link
+				}
+
+				// Custom Archive Link:
+				if ( 'custom' === $archive_link_method ) {
+					$custom_archive_link = $metabox_fields['metabox_posts_archive_selection_custom_link'];
+					if ( ! empty( $custom_archive_link ) ) {
+						$context['metabox_posts']['cta']['title'] = $custom_archive_link['title'] ?: _x( 'Bekijk alle berichten', 'Linktekst voor Community berichten', 'gctheme' );
+						$context['metabox_posts']['cta']['url']   = $custom_archive_link['url'];
+					}
 				}
 			}
 
