@@ -314,6 +314,50 @@ if ( $current_community_term && ! is_wp_error( $current_community_term ) ) {
 						$metabox_posts_category_text = $metabox_fields['metabox_posts_archive_selection_automatic_link_text'] ?: _x( 'Bekijk alle berichten', 'Linktekst voor Community berichten', 'gctheme' );
 						$metabox_posts_category_link = get_term_link( (int) $current_community_term->term_id, GC_COMMUNITY_TAX );
 
+						// `$metabox_posts_category_link` is the default Community Taxonomy archive link
+						// but we want to link to a special 'Archive' page if it's available.
+
+						// So:
+						// We try and get the 1st page with the template-posts-communities.php template
+						// that is a child of the current community page and use this page permalink as the archive link.
+
+						// Query all page ID's with the template-posts-communities.php template:
+						// and check if they are either:
+						// - a child of this community page
+						// - or have a link to this community term
+						$all_child_archive_pages       = array();
+						$all_child_archive_pages_query = new WP_Query( array(
+							'post_type' => 'page',
+							'post_status' => 'publish',
+							'post_parent' => $timber_post->ID,
+							'posts_per_page' => 1,
+							'fields' => 'ids',
+							'meta_query' => array(
+								array(
+									'key' => '_wp_page_template',
+									'value' => GC_COMMUNITY_TAX_POSTS_ARCHIVE_TEMPLATE,
+									// "relation" => "AND",
+									// 'compare' => '=',
+								),
+							)
+						) );
+
+						// The custom Loop
+						if ( $all_child_archive_pages_query->have_posts() ) {
+							while ( $all_child_archive_pages_query->have_posts() ) {
+								// Let's take what we need, here the whole object but you can pick only what you need:
+								$all_child_archive_pages_query->the_post();
+								$all_child_archive_pages[] = $post;
+							}
+
+							// Override `$metabox_posts_category_link`
+							// with our found page permalink.
+							$metabox_posts_category_link = get_permalink( $all_child_archive_pages[0] );
+
+							// Reset our postdata:
+							wp_reset_postdata();
+						}
+
 						// Replace placeholder with term name in automatic link text
 						$metabox_posts_category_text = sprintf( $metabox_posts_category_text, $metabox_posts_category_name );
 
