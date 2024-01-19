@@ -8,8 +8,8 @@
  * Plugin Name:         ICTU / Gebruiker Centraal / Community taxonomie
  * Plugin URI:          https://github.com/ICTU/ictuwp-plugin-community-taxonomie
  * Description:         Plugin voor het aanmaken van de 'community'-taxonomie
- * Version:             1.5.6
- * Version description: Optimize `metabox_posts_archive_selection` for Archive Link.
+ * Version:             1.5.7
+ * Version description: Community Archive link
  * Author:              David Hund
  * Author URI:          https://github.com/ICTU/ictuwp-plugin-community-taxonomie/
  * License:             GPL-3.0+
@@ -27,6 +27,7 @@ if ( ! defined( 'WPINC' ) ) {
 defined( 'GC_COMMUNITY_TAX' ) or define( 'GC_COMMUNITY_TAX', 'community' );
 defined( 'GC_COMMUNITY_TAX_OVERVIEW_TEMPLATE' ) or define( 'GC_COMMUNITY_TAX_OVERVIEW_TEMPLATE', 'template-overview-communities.php' );
 defined( 'GC_COMMUNITY_TAX_DETAIL_TEMPLATE' ) or define( 'GC_COMMUNITY_TAX_DETAIL_TEMPLATE', 'template-detail-communities.php' );
+defined( 'GC_COMMUNITY_TAX_POSTS_ARCHIVE_TEMPLATE' ) or define( 'GC_COMMUNITY_TAX_POSTS_ARCHIVE_TEMPLATE', 'template-posts-communities.php' );
 defined( 'GC_COMMUNITY_TAX_ASSETS_PATH' ) or define( 'GC_COMMUNITY_TAX_ASSETS_PATH' , '/wp-content/plugins/ictuwp-plugin-community-taxonomie/assets' );
 //========================================================================================================
 // only this plugin should activate the GC_COMMUNITY_TAX taxonomy
@@ -196,7 +197,11 @@ if ( ! class_exists( 'ICTU_GC_community_taxonomy' ) ) :
 				// Get template name; this will only work for pages, obviously
 				$page_template = get_post_meta( $post->ID, '_wp_page_template', true );
 
-				if ( ( GC_COMMUNITY_TAX_OVERVIEW_TEMPLATE === $page_template ) || ( GC_COMMUNITY_TAX_DETAIL_TEMPLATE === $page_template ) ) {
+				if (
+					( GC_COMMUNITY_TAX_OVERVIEW_TEMPLATE === $page_template ) ||
+					( GC_COMMUNITY_TAX_DETAIL_TEMPLATE === $page_template ) ||
+					( GC_COMMUNITY_TAX_POSTS_ARCHIVE_TEMPLATE === $page_template )
+				) {
 					// these names are added by this plugin, so we return
 					// the actual file path for this template
 					$file = $pluginpath . $page_template;
@@ -239,7 +244,7 @@ if ( ! class_exists( 'ICTU_GC_community_taxonomy' ) ) :
 				// Try and see if it has the GC_COMMUNITY_TAX_DETAIL_TEMPLATE template
 				// and if so, append the Community Overview Page to the breadcrumb
 				// But only if the current page is not a childpage of the parent...
-				if (  $post->post_parent !== 0 ) {
+				if ( $post->post_parent !== 0 ) {
 					// page does have a parent, whatever parent it might be, so:
 					// do nothing extra for breadcrumb
 
@@ -431,8 +436,9 @@ function fn_ictu_community_load_plugin_textdomain() {
 function fn_ictu_community_add_templates() {
 
 	$return_array = array(
-		GC_COMMUNITY_TAX_OVERVIEW_TEMPLATE => _x( '[Community] overzicht', 'label page template', 'gctheme' ),
-		GC_COMMUNITY_TAX_DETAIL_TEMPLATE   => _x( '[Community] detailpagina', 'label page template', 'gctheme' )
+		GC_COMMUNITY_TAX_OVERVIEW_TEMPLATE      => _x( '[Community] overzicht', 'label page template', 'gctheme' ),
+		GC_COMMUNITY_TAX_DETAIL_TEMPLATE        => _x( '[Community] detailpagina', 'label page template', 'gctheme' ),
+		GC_COMMUNITY_TAX_POSTS_ARCHIVE_TEMPLATE => _x( '[Community] artikelen archief', 'label page template', 'gctheme' ),
 	);
 
 	return $return_array;
