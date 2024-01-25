@@ -86,8 +86,7 @@ if ( ! class_exists( 'ICTU_GC_community_taxonomy' ) ) :
 			add_filter( 'wpseo_breadcrumb_links', array( $this, 'fn_ictu_community_yoast_filter_breadcrumb' ) );
 
 			// check if the term has detail page attached
-			// @TODO: Requested but does not yet work correctly. See GC-587
-			// add_action( 'template_redirect', array( $this, 'fn_ictu_community_check_redirect' ) );
+			add_action( 'template_redirect', array( $this, 'fn_ictu_community_check_redirect' ) );
 
 			// Hide the `metabox_posts_category` field for 'community' related posts
 			// (because we already filter on Community tax term)
@@ -318,49 +317,45 @@ if ( ! class_exists( 'ICTU_GC_community_taxonomy' ) ) :
 		/**
 		 * Checks if the community term is linked to a page and redirect
 		 *
-		 * @TODO: Requested but does not yet work correctly. See GC-587
-		 *
 		 * @return: {Function|null} wp_safe_redirect when possible
 		 *
 		 */
-		// public function fn_ictu_community_check_redirect() {
-		//
-		// 	if ( ! function_exists( 'get_field' ) ) {
-		// 		// we can't check if ACF is not active
-		// 		return;
-		// 	}
-		//
-		// 	if ( is_tax( GC_COMMUNITY_TAX ) ) {
-		//
-		// 		// check if the current term has a value for 'community_taxonomy_page'
-		// 		$pageid = get_field( 'community_taxonomy_page', GC_COMMUNITY_TAX . '_' . get_queried_object()->term_id );
-		// 		$page   = get_post( $pageid );
-		// 		if ( $page ) {
-		// 			// cool, a page is selected for this term
-		// 			// But is the page published?
-		// 			if ( 'publish' === $page->post_status ) {
-		// 				// good, it is published
-		// 				// let's redirect to that page
-		// 				wp_safe_redirect( get_permalink( $page->ID ) );
-		// 				exit;
-		//
-		// 			} else {
-		// 				// bad, we only want published pages
-		// 				$aargh = 'No published page attached to this community';
-		// 				if ( current_user_can( 'editor' ) ) {
-		// 					$editlink = get_edit_term_link( get_queried_object()->term_id, get_queried_object()->taxonomy );
-		// 					$aargh    .= '<a href="' . $editlink . '">Please choose a published page for this term.</a>';
-		// 				}
-		// 				die( $aargh );
-		// 			}
-		// 		} else {
-		// 			// no page is selected for this term
-		// 			// for now, do nothing
-		// 			die('do nothing?');
-		// 		}
-		// 	}
-		//
-		// }
+		public function fn_ictu_community_check_redirect() {
+
+			if ( ! function_exists( 'get_field' ) ) {
+				// we can't check if ACF is not active
+				return;
+			}
+
+			if ( is_tax( GC_COMMUNITY_TAX ) ) {
+
+				// check if the current term has a value for 'community_taxonomy_page'
+				$term    = get_queried_object();
+				$page_id = get_field( 'community_taxonomy_page', $term );
+				if ( ! empty( $page_id ) ) {
+					$page = get_post( $page_id );
+				}
+
+				// A page is selected for this term
+				// But is the page published?
+				if ( $page && 'publish' === $page->post_status ) {
+					// good: it is published
+					// let's redirect to that page
+					wp_safe_redirect( get_permalink( $page->ID ) );
+					exit;
+
+				} else {
+					// bad: we only want published pages
+					$aargh = 'No published page attached to this community';
+					if ( current_user_can( 'editor' ) ) {
+						$editlink = get_edit_term_link( get_queried_object()->term_id, get_queried_object()->taxonomy );
+						$aargh    .= '<a href="' . $editlink . '">Please choose a published page for this term.</a>';
+					}
+					die( $aargh );
+				}
+			}
+
+		}
 
 
 		/**
