@@ -180,7 +180,8 @@ if ( ! class_exists( 'ICTU_GC_community_taxonomy' ) ) :
 			// This messes with the template selection, so we need to check for that
 			// and use the default archive template
 			// @TODO: investigate/improve this
-			if ( is_tax( GC_COMMUNITY_TAX ) ) {
+			// use is_singular() instead?
+			if ( is_search() or is_tax( GC_COMMUNITY_TAX ) ) {
 				// $term = get_queried_object();
 				return $template;
 			}
