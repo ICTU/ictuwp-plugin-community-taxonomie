@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: ICTU / Gebruiker Centraal / Community taxonomie\n"
-"POT-Creation-Date: 2023-12-18 12:36+0100\n"
-"PO-Revision-Date: 2023-12-18 12:36+0100\n"
+"POT-Creation-Date: 2024-01-30 15:27+0100\n"
+"PO-Revision-Date: 2024-01-30 15:27+0100\n"
 "Last-Translator: Paul van Buuren <poedit@wbvb.nl>\n"
 "Language-Team: David Hund\n"
 "Language: nl_NL\n"
@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.4.1\n"
+"X-Generator: Poedit 3.4.2\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-Flags-xgettext: --add-comments=translators:\n"
 "X-Poedit-WPHeader: ictuwp-plugin-community-taxonomie.php\n"
@@ -21,12 +21,23 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: *.min.js\n"
 
-#: ictuwp-plugin-community-taxonomie.php:365
+#: ictuwp-plugin-community-taxonomie.php:350
+msgctxt "Warning for redirect error"
+msgid "Er hangt geen gepubliceerde pagina aan deze community."
+msgstr ""
+
+#: ictuwp-plugin-community-taxonomie.php:353
+#, php-format
+msgctxt "Warning for redirect error"
+msgid "<a href=\"%s\">Voeg een gepubliceerde pagina toe, alsjeblieft.</a>"
+msgstr ""
+
+#: ictuwp-plugin-community-taxonomie.php:430
 msgctxt "label page template"
 msgid "[Community] overzicht"
 msgstr ""
 
-#: ictuwp-plugin-community-taxonomie.php:366
+#: ictuwp-plugin-community-taxonomie.php:431
 msgctxt "label page template"
 msgid "[Community] detailpagina"
 msgstr ""
@@ -172,23 +183,23 @@ msgctxt "Community taxonomy error message"
 msgid "Kies een relevante community voor deze pagina. "
 msgstr ""
 
-#: template-detail-communities.php:302
-msgctxt "Linktekst voor LLK pagina met berichten"
+#: template-detail-communities.php:314 template-detail-communities.php:329
+msgctxt "Linktekst voor Community berichten"
 msgid "Bekijk alle berichten"
 msgstr ""
 
-#: template-detail-communities.php:349
+#: template-detail-communities.php:362
 msgctxt "default title for profiles"
 msgid "Meer weten over deze community?"
 msgstr ""
 
-#: template-overview-communities.php:85
+#: template-overview-communities.php:95
 msgctxt "Community overview: card warning"
 msgid ""
 "Deze card is verborgen totdat een pagina wordt gekoppeld aan deze Community!"
 msgstr ""
 
-#: template-overview-communities.php:135
+#: template-overview-communities.php:147
 msgctxt "Community overview: card warning"
 msgid ""
 "Deze card is verborgen totdat de pagina het  '<em>[Community] detailpagina</"

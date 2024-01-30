@@ -27,7 +27,7 @@ if ( ! defined( 'WPINC' ) ) {
 defined( 'GC_COMMUNITY_TAX' ) or define( 'GC_COMMUNITY_TAX', 'community' );
 defined( 'GC_COMMUNITY_TAX_OVERVIEW_TEMPLATE' ) or define( 'GC_COMMUNITY_TAX_OVERVIEW_TEMPLATE', 'template-overview-communities.php' );
 defined( 'GC_COMMUNITY_TAX_DETAIL_TEMPLATE' ) or define( 'GC_COMMUNITY_TAX_DETAIL_TEMPLATE', 'template-detail-communities.php' );
-defined( 'GC_COMMUNITY_TAX_ASSETS_PATH' ) or define( 'GC_COMMUNITY_TAX_ASSETS_PATH' , '/wp-content/plugins/ictuwp-plugin-community-taxonomie/assets' );
+defined( 'GC_COMMUNITY_TAX_ASSETS_PATH' ) or define( 'GC_COMMUNITY_TAX_ASSETS_PATH', '/wp-content/plugins/ictuwp-plugin-community-taxonomie/assets' );
 //========================================================================================================
 // only this plugin should activate the GC_COMMUNITY_TAX taxonomy
 if ( ! taxonomy_exists( GC_COMMUNITY_TAX ) ) {
@@ -90,7 +90,7 @@ if ( ! class_exists( 'ICTU_GC_community_taxonomy' ) ) :
 
 			// Hide the `metabox_posts_category` field for 'community' related posts
 			// (because we already filter on Community tax term)
-			add_filter( 'acf/prepare_field/name=metabox_posts_category', function( $field ) {
+			add_filter( 'acf/prepare_field/name=metabox_posts_category', function ( $field ) {
 				global $post;
 				if ( ! empty( $post ) ) {
 					// Check if we're currently editing a post
@@ -102,6 +102,7 @@ if ( ! class_exists( 'ICTU_GC_community_taxonomy' ) ) :
 						return false;
 					}
 				}
+
 				return $field;
 			} );
 
@@ -238,7 +239,7 @@ if ( ! class_exists( 'ICTU_GC_community_taxonomy' ) ) :
 				// Try and see if it has the GC_COMMUNITY_TAX_DETAIL_TEMPLATE template
 				// and if so, append the Community Overview Page to the breadcrumb
 				// But only if the current page is not a childpage of the parent...
-				if (  $post->post_parent !== 0 ) {
+				if ( $post->post_parent !== 0 ) {
 					// page does have a parent, whatever parent it might be, so:
 					// do nothing extra for breadcrumb
 
@@ -346,10 +347,10 @@ if ( ! class_exists( 'ICTU_GC_community_taxonomy' ) ) :
 
 				} else {
 					// bad: we only want published pages
-					$aargh = 'No published page attached to this community';
+					$aargh = _x( 'Er hangt geen gepubliceerde pagina aan deze community.', 'Warning for redirect error', 'gctheme' );
 					if ( current_user_can( 'editor' ) ) {
 						$editlink = get_edit_term_link( get_queried_object()->term_id, get_queried_object()->taxonomy );
-						$aargh    .= '<a href="' . $editlink . '">Please choose a published page for this term.</a>';
+						$aargh .= '<br>' . sprintf( _x( '<a href="%s">Voeg een gepubliceerde pagina toe, alsjeblieft.</a>', 'Warning for redirect error', 'gctheme' ), $editlink );
 					}
 					die( $aargh );
 				}
