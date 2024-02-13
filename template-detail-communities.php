@@ -316,6 +316,7 @@ if ( $current_community_term && ! is_wp_error( $current_community_term ) ) {
 
 						// `$metabox_posts_category_link` is the default Community Taxonomy archive link
 						// but we want to link to a special 'Archive' page if it's available.
+						// So it's a fallback.
 
 						// So:
 						// We try and get the 1st page with the template-posts-communities.php template
@@ -356,13 +357,17 @@ if ( $current_community_term && ! is_wp_error( $current_community_term ) ) {
 
 							// Reset our postdata:
 							wp_reset_postdata();
+
+							// Replace placeholder with term name in automatic link text
+							$metabox_posts_category_text = sprintf( $metabox_posts_category_text, $metabox_posts_category_name );
+
+							$context['metabox_posts']['cta']['title'] = $metabox_posts_category_text;
+							$context['metabox_posts']['cta']['url']   = $metabox_posts_category_link;
+
+						} else {
+							// We have NO archive page
+							// So do NOT fill $context['metabox_posts']['cta']
 						}
-
-						// Replace placeholder with term name in automatic link text
-						$metabox_posts_category_text = sprintf( $metabox_posts_category_text, $metabox_posts_category_name );
-
-						$context['metabox_posts']['cta']['title'] = $metabox_posts_category_text;
-						$context['metabox_posts']['cta']['url']   = $metabox_posts_category_link;
 					}
 				}
 

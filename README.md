@@ -3,9 +3,10 @@ Plugin voor het aanmaken van de 'community'-taxonomie
 
 
 ## Current version:
-* 1.5.8 - Community Term Archive redirect to landingspage.
+* 1.5.9 - Do not show automatic archive link when there's no page for it.
 
 ## Version history
+* 1.5.8 - Community Term Archive redirect to landingspage.
 * 1.5.7 - Community Archive link
 * 1.5.6 - Optimize `metabox_posts_archive_selection` for Archive Link.
 * 1.5.5 - Added category selection in automatic posts metabox.
