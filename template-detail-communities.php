@@ -3,11 +3,10 @@
  * Template Name: [Community] detailpagina
  *
  * @package    WordPress
- * @subpackage Timber
- * @since      Timber 0.1
+ * @subpackage Timber v2
  */
 
-$timber_post = new Timber\Post();
+$timber_post = Timber::get_post();
 
 $current_community_taxid = get_current_community_tax();
 $current_community_term  = get_term_by( 'id', $current_community_taxid, GC_COMMUNITY_TAX );
