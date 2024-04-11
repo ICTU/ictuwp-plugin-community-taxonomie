@@ -3,12 +3,11 @@
  * Template Name: [Community] overzicht
  *
  * @package    WordPress
- * @subpackage Timber
- * @since      Timber 0.1
+ * @subpackage Timber v2
  */
 
 $context                       = Timber::context();
-$context['post']               = new Timber\Post();
+$context['post']               = Timber::get_post();
 $context['modifier']            = 'community-overview';
 $context['item_type']          = 'community-overview'; // Pass item_type to grid section (adds ID to grid)
 $context['has_centered_intro'] = false;

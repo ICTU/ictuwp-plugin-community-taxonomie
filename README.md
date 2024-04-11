@@ -3,9 +3,10 @@ Plugin voor het aanmaken van de 'community'-taxonomie
 
 
 ## Current version:
-* 1.5.10 - Add visual for Proactieve Dienstverlening.
+* 2.0.0 - Refactor for Timber v2
 
 ## Version history
+* 1.5.10 - Add visual for Proactieve Dienstverlening.
 * 1.5.9 - Do not show automatic archive link when there's no page for it.
 * 1.5.8 - Community Term Archive redirect to landingspage.
 * 1.5.7 - Community Archive link

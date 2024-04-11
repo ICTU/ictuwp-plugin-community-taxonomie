@@ -3,15 +3,14 @@
  * Template Name: [Community] artikelen archief
  *
  * @package    WordPress
- * @subpackage Timber
- * @since      Timber 0.1
+ * @subpackage Timber v2
  */
 global $paged;
 if ( ! isset( $paged ) || ! $paged ) {
 	$paged = 1;
 }
 
-$timber_post                  = new Timber\Post();
+$timber_post                  = Timber::get_post();
 
 $context                      = Timber::context();
 $context['post']              = $timber_post;
@@ -115,7 +114,7 @@ if ( isset( $community_term ) && ! is_wp_error( $community_term ) ) {
         ),
     );
 
-    $context['posts'] = new Timber\PostQuery( $args );
+    $context['posts'] = Timber::get_posts( $args );
 
     if ( count( $context['posts'] ) > 0 ) {
         // Set intro overlap to true, we pull up 1st item into intro
