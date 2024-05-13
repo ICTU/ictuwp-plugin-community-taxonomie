@@ -3,9 +3,10 @@ Plugin voor het aanmaken van de 'community'-taxonomie
 
 
 ## Current version:
-* 2.0.1 - Fix SVG image bugs
+* 2.0.2 - Fix bugs in c-proactieve-dienstverlening.svg
 
 ## Version history
+* 2.0.1 - Fix SVG image bugs
 * 2.0.0 - Refactor for Timber v2
 * 1.5.10 - Add visual for Proactieve Dienstverlening.
 * 1.5.9 - Do not show automatic archive link when there's no page for it.
