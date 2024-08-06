@@ -82,7 +82,8 @@ if ( ! taxonomy_exists( GC_COMMUNITY_TAX ) ) {
 		'keynote',
 		'speaker',
 		'event',
-		'video_page'
+		'video_page',
+		'richtlijn',
 	];
 
 	// check if the post types exist
