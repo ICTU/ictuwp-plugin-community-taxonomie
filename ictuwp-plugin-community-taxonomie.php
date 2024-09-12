@@ -8,8 +8,8 @@
  * Plugin Name:         ICTU / Gebruiker Centraal / Community taxonomie
  * Plugin URI:          https://github.com/ICTU/ictuwp-plugin-community-taxonomie
  * Description:         Plugin voor het aanmaken van de 'community'-taxonomie
- * Version:             2.0.3
- * Version description: Add Community Tax to Richtlijn CPT
+ * Version:             2.0.4
+ * Version description: Add paging param to Community Posts Archive breadcrumb.
  * Author:              David Hund
  * Author URI:          https://github.com/ICTU/ictuwp-plugin-community-taxonomie/
  * License:             GPL-3.0+
@@ -241,6 +241,8 @@ if ( ! class_exists( 'ICTU_GC_community_taxonomy' ) ) :
 
 			if ( $post && is_page() ) {
 
+				$page_template = get_post_meta( $post->ID, '_wp_page_template', true );
+
 				// Currently Querying a Page
 				// Try and see if it has the GC_COMMUNITY_TAX_DETAIL_TEMPLATE template
 				// and if so, append the Community Overview Page to the breadcrumb
@@ -251,8 +253,6 @@ if ( ! class_exists( 'ICTU_GC_community_taxonomy' ) ) :
 
 				} else {
 					// page does NOT have a parent, so let's add the GC_COMMUNITY_TAX_DETAIL_TEMPLATE to
-					$page_template = get_post_meta( $post->ID, '_wp_page_template', true );
-
 					if ( $page_template && $page_template === GC_COMMUNITY_TAX_DETAIL_TEMPLATE ) {
 						// current page has template = GC_COMMUNITY_TAX_DETAIL_TEMPLATE
 
@@ -274,6 +274,26 @@ if ( ! class_exists( 'ICTU_GC_community_taxonomy' ) ) :
 
 				}
 
+				// Are we on the Community Taxonomy Posts Archive Page?
+				// If so, add paging number to the breadcrumbs.
+				if ( ! isset( $paged ) || empty( $paged ) ) {
+					$paged = get_query_var( 'paged' ) ?: 1;
+				}
+				if ( $paged !== 1 ) {
+					// we use pagination and we are not on page 1
+					$pagination_text = sprintf( _x( "pagina %s", "Yoast breadcrumb filter", 'gctheme' ), $paged );
+					if ( $page_template && $page_template === GC_COMMUNITY_TAX_POSTS_ARCHIVE_TEMPLATE ) {
+						$last_item = array_pop( $links );
+						// Update `text`
+						if ( $last_item['text'] ) {
+							$last_item['text'] .= ', ' . $pagination_text;
+						} else {
+							$last_item['text'] = ' ' . $pagination_text;
+						}
+
+						array_push( $links, $last_item );
+					}
+				}
 
 			} elseif ( is_tax( GC_COMMUNITY_TAX ) ) {
 

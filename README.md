@@ -3,9 +3,10 @@ Plugin voor het aanmaken van de 'community'-taxonomie
 
 
 ## Current version:
-* 2.0.3 - Add Community Tax to Richtlijn CPT.
+* 2.0.4 - Add paging param to Community Posts Archive breadcrumb.
 
 ## Version history
+* 2.0.3 - Add Community Tax to Richtlijn CPT.
 * 2.0.2 - Fix bugs in c-proactieve-dienstverlening.svg
 * 2.0.1 - Fix SVG image bugs
 * 2.0.0 - Refactor for Timber v2
