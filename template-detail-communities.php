@@ -11,13 +11,17 @@ $timber_post = Timber::get_post();
 $current_community_taxid = get_current_community_tax();
 $current_community_term  = get_term_by( 'id', $current_community_taxid, GC_COMMUNITY_TAX );
 
+if ( is_wp_error( $current_community_term ) ) {
+	$current_community_term = null;
+}
+
 $context                = Timber::context();
 $context['post']        = $timber_post;
 $context['modifier']    = 'community-detail';
 $context['is_unboxed']  = true;
 $context['show_author'] = false;
 
-if ( $current_community_term && ! is_wp_error( $current_community_term ) ) {
+if ( $current_community_term ) {
 	// Update body class
 	$context['body_class'] = ( $context['body_class'] ?: '' ) . ' community--' . $current_community_term->slug;
 }
@@ -55,7 +59,7 @@ if ( function_exists( 'gc_fill_context_with_acf_fields' ) ) {
 }
 
 // We have a valid Community Term for this page
-if ( $current_community_term && ! is_wp_error( $current_community_term ) ) {
+if ( $current_community_term ) {
 
 	// Get custom ACF fields for this WP_Term..
 	// filter out 'empty' or nullish values
@@ -395,6 +399,88 @@ if ( $current_community_term && ! is_wp_error( $current_community_term ) ) {
 			}
 			$context['metabox_posts']['columncounter'] = count( $context['metabox_posts']['items'] );
 		}
+	}
+
+
+	/**
+	 * (45) Related Richtlijnen
+	 * ----------------------------- */
+	$metabox_richtlijnen = get_field( 'richtlijnen' );
+
+	if ( $metabox_richtlijnen && 'ja' === $metabox_richtlijnen['metabox_community_richtlijnen_show_or_not'] ) {
+
+		$maxnr            = 3; // todo TBD: should this be a user editable field?
+		$metabox_item_ids = array();
+
+		// Do we have a Community Term?
+		// Only continue if we do.
+		if ( $current_community_term ) {
+
+			$richtlijn_detail_template = defined( 'GC_RICHTLIJN_TAX_DETAIL_TEMPLATE' ) ? GC_RICHTLIJN_TAX_DETAIL_TEMPLATE : 'template-detail-richtlijnen.php';
+
+			// Get all Pages with the richtlijnen detail template
+			// and that have the current community term.
+			$args = array(
+				'posts_per_page' => $maxnr,
+				'post_type'      => 'page',
+				'post_status'    => 'publish',
+				'fields'          => 'ids', // only return IDs
+				'meta_query'     => array(
+					'relation' => 'AND',
+					array(
+						'key'   => '_wp_page_template',
+						'value' => $richtlijn_detail_template,
+					),
+				),
+				'tax_query'      => array(
+					array(
+						'taxonomy' => GC_COMMUNITY_TAX,
+						'field'     => 'term_id',
+						'terms'    => $current_community_term->term_id,
+					)
+				),
+			);
+
+			$richtlijn_pages_query = new WP_Query( $args );
+			if ( $richtlijn_pages_query->have_posts() ) {
+				// we only use post ids for the $metabox_item_ids array
+				$metabox_item_ids = $richtlijn_pages_query->posts;
+			}
+
+			// ensure to reset the main query to original main query
+			wp_reset_query();
+
+			if ( $metabox_item_ids ) {
+
+				$context['metabox_community_richtlijnen']                = [];
+				$context['metabox_community_richtlijnen']['items']       = [];
+				$context['metabox_community_richtlijnen']['cta']         = $metabox_richtlijnen['metabox_community_richtlijnen_url_overview'];
+				$context['metabox_community_richtlijnen']['title']       = $metabox_richtlijnen['metabox_community_richtlijnen_titel'] ?? '';
+				$context['metabox_community_richtlijnen']['description'] = $metabox_richtlijnen['metabox_community_richtlijnen_omschrijving'] ?? '';
+
+				$richtlijnen_section_modifier = $metabox_richtlijnen['metabox_community_richtlijnen_section_style'];
+				if ( $richtlijnen_section_modifier !== 'default' ) {
+					$context['metabox_community_richtlijnen']['modifier'] = $richtlijnen_section_modifier;
+				}
+
+				foreach ( $metabox_item_ids as $post_id ) {
+
+					$item  = prepare_card_content( get_post( $post_id ) );
+					// $image = get_the_post_thumbnail_url( $post_id, IMAGESIZE_16x9 );
+					// if ( $image ) {
+					// 	// decorative image, no value for alt attr.
+					// 	$item['img'] = '<img src="' . $image . '" alt="" />';
+					// 	// Provide Image as URL instead of HTML?
+					// 	// $item['img']     = $image;
+					// 	// $item['img_alt'] = '';
+					// }
+					$context['metabox_community_richtlijnen']['items'][] = $item;
+				}
+				$context['metabox_community_richtlijnen']['columncounter'] = count( $context['metabox_community_richtlijnen']['items'] );
+			}
+
+		}
+
 	}
 
 	/**
