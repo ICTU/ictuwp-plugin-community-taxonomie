@@ -91,7 +91,8 @@ if ( function_exists( 'gc_get_colorschemes' ) ) {
 
 }
 
-// Add the field group
+// Add the field group: GC - Community taxonomy
+// ----------------------------
 acf_add_local_field_group( array(
 	'key' => 'group_654a4b2352a09',
 	'title' => 'GC - Community taxonomy',
@@ -216,6 +217,212 @@ acf_add_local_field_group( array(
 	'show_in_rest' => 0,
 ) );
 
+
+// Add the field group: 'Metabox: (45) Community Richtlijnen tonen'
+// definitions taken from:
+// [themes]/ictuwp-theme-gc2020/acf-json/group_66ec271484731.json.original
+//
+// Metabox order for template-detail-communities.php
+// this number determines $menu_order
+//
+// 10 - Intro-tekst
+// 20 - info / USP ("Wat houdt het in?")
+// 30 - Events
+// 40 - berichten
+// 45 - richtlijnen <--
+// 50 - profielen
+// 60 - formulier
+// 70 - partners
+// ----------------------------
+acf_add_local_field_group( array(
+	'key' => 'group_66ec271484731',
+	'title' => 'Metabox: (45) Community Richtlijnen tonen',
+	'fields' => array(
+		array(
+			'key' => 'field_66ec27158989d',
+			'label' => 'Gerelateerde richtlijnen',
+			'name' => 'richtlijnen',
+			'aria-label' => '',
+			'type' => 'group',
+			'instructions' => 'Toon of verberg het blok met richtlijnen voor deze pagina.',
+			'required' => 0,
+			'conditional_logic' => 0,
+			'wrapper' => array(
+				'width' => '',
+				'class' => '',
+				'id' => '',
+			),
+			'layout' => 'block',
+			'sub_fields' => array(
+				array(
+					'key' => 'field_66ec27158baa8',
+					'label' => 'Richtlijnen tonen voor deze community?',
+					'name' => 'metabox_community_richtlijnen_show_or_not',
+					'aria-label' => '',
+					'type' => 'radio',
+					'instructions' => '',
+					'required' => 0,
+					'conditional_logic' => 0,
+					'wrapper' => array(
+						'width' => '',
+						'class' => '',
+						'id' => '',
+					),
+					'choices' => array(
+						'ja' => 'Ja',
+						'nee' => 'Nee',
+					),
+					'default_value' => 'nee',
+					'return_format' => 'value',
+					'allow_null' => 0,
+					'other_choice' => 0,
+					'allow_in_bindings' => 1,
+					'layout' => 'horizontal',
+					'save_other_choice' => 0,
+				),
+				array(
+					'key' => 'field_66ec27158bab0',
+					'label' => 'Titel',
+					'name' => 'metabox_community_richtlijnen_titel',
+					'aria-label' => '',
+					'type' => 'text',
+					'instructions' => '',
+					'required' => 0,
+					'conditional_logic' => array(
+						array(
+							array(
+								'field' => 'field_66ec27158baa8',
+								'operator' => '==',
+								'value' => 'ja',
+							),
+						),
+					),
+					'wrapper' => array(
+						'width' => '',
+						'class' => '',
+						'id' => '',
+					),
+					'default_value' => 'Hulp nodig?',
+					'maxlength' => '',
+					'allow_in_bindings' => 1,
+					'placeholder' => '',
+					'prepend' => '',
+					'append' => '',
+				),
+				array(
+					'key' => 'field_66ec299bda57e',
+					'label' => 'Omschrijving',
+					'name' => 'metabox_community_richtlijnen_omschrijving',
+					'aria-label' => '',
+					'type' => 'textarea',
+					'instructions' => '',
+					'required' => 0,
+					'conditional_logic' => array(
+						array(
+							array(
+								'field' => 'field_66ec27158baa8',
+								'operator' => '==',
+								'value' => 'ja',
+							),
+						),
+					),
+					'wrapper' => array(
+						'width' => '',
+						'class' => '',
+						'id' => '',
+					),
+					'default_value' => '',
+					'maxlength' => '',
+					'allow_in_bindings' => 0,
+					'rows' => 4,
+					'placeholder' => '',
+					'new_lines' => 'wpautop',
+				),
+				array(
+					'key' => 'field_66ec27158bad0',
+					'label' => 'Overzichtslink',
+					'name' => 'metabox_community_richtlijnen_url_overview',
+					'aria-label' => '',
+					'type' => 'link',
+					'instructions' => '',
+					'required' => 0,
+					'conditional_logic' => array(
+						array(
+							array(
+								'field' => 'field_66ec27158baa8',
+								'operator' => '==',
+								'value' => 'ja',
+							),
+						),
+					),
+					'wrapper' => array(
+						'width' => '',
+						'class' => '',
+						'id' => '',
+					),
+					'return_format' => 'array',
+					'allow_in_bindings' => 1,
+				),
+				array(
+					'key' => 'field_66ec2ce9cab83',
+					'label' => 'Sectie stijl',
+					'name' => 'metabox_community_richtlijnen_section_style',
+					'aria-label' => '',
+					'type' => 'radio',
+					'instructions' => '',
+					'required' => 0,
+					'conditional_logic' => array(
+						array(
+							array(
+								'field' => 'field_66ec27158baa8',
+								'operator' => '==',
+								'value' => 'ja',
+							),
+						),
+					),
+					'wrapper' => array(
+						'width' => '',
+						'class' => '',
+						'id' => '',
+					),
+					'choices' => array(
+						'default' => 'Standaard',
+						'background' => 'Met achtergrond',
+					),
+					'default_value' => 'background',
+					'return_format' => 'value',
+					'multiple' => 0,
+					'allow_null' => 0,
+					'allow_in_bindings' => 0,
+					'ui' => 0,
+					'ajax' => 0,
+					'placeholder' => '',
+				),
+			),
+		),
+	),
+	'location' => array(
+		array(
+			array(
+				'param' => 'page_template',
+				'operator' => '==',
+				'value' => 'template-detail-communities.php',
+			),
+		),
+	),
+	'menu_order' => 40,
+	'position' => 'normal',
+	'style' => 'default',
+	'label_placement' => 'top',
+	'instruction_placement' => 'label',
+	'hide_on_screen' => '',
+	'active' => true,
+	'description' => '',
+	'show_in_rest' => 0,
+) );
+
+
+// ----------------------------
 
 /**
  * The following appends CSS styles to the global
