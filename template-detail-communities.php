@@ -409,7 +409,7 @@ if ( $current_community_term ) {
 
 	if ( $metabox_richtlijnen && 'ja' === $metabox_richtlijnen['metabox_community_richtlijnen_show_or_not'] ) {
 
-		$maxnr            = 3; // todo TBD: should this be a user editable field?
+		$maxnr            = -1; // todo TBD: should this be a user editable field?
 		$metabox_item_ids = array();
 
 		// Do we have a Community Term?

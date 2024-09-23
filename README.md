@@ -3,9 +3,10 @@ Plugin voor het aanmaken van de 'community'-taxonomie
 
 
 ## Current version:
-* 2.1.0 - Add related Richtlijnen to detail page.
+* 2.1.1 - Query unlimited nr of Richtlijnen to show.
 
 ## Version history
+* 2.1.0 - Add related Richtlijnen to detail page.
 * 2.0.4 - Add paging param to Community Posts Archive breadcrumb.
 * 2.0.3 - Add Community Tax to Richtlijn CPT.
 * 2.0.2 - Fix bugs in c-proactieve-dienstverlening.svg
