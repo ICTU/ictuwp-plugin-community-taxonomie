@@ -3,9 +3,10 @@ Plugin voor het aanmaken van de 'community'-taxonomie
 
 
 ## Current version:
-* 2.1.1 - Query unlimited nr of Richtlijnen to show.
+* 2.2.0 - Related Community Richtlijnen are selectable, no longer automatic. Requires plugin `ictuwp-plugin-richtlijn-taxonomie:1.3.0`.
 
 ## Version history
+* 2.1.1 - Query unlimited nr of Richtlijnen to show.
 * 2.1.0 - Add related Richtlijnen to detail page.
 * 2.0.4 - Add paging param to Community Posts Archive breadcrumb.
 * 2.0.3 - Add Community Tax to Richtlijn CPT.
