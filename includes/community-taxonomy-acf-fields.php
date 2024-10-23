@@ -118,7 +118,8 @@ acf_add_local_field_group( array(
 			'taxonomy' => '',
 			'return_format' => 'id',
 			'multiple' => 0,
-			'allow_null' => 0,
+			'allow_null' => 1,
+			'allow_in_bindings' => 0,
 			'bidirectional' => 1,
 			'bidirectional_target' => array(
 				0 => 'field_6526b1c436369',

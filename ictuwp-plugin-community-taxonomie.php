@@ -8,8 +8,8 @@
  * Plugin Name:         ICTU / Gebruiker Centraal / Community taxonomie
  * Plugin URI:          https://github.com/ICTU/ictuwp-plugin-community-taxonomie
  * Description:         Plugin voor het aanmaken van de 'community'-taxonomie
- * Version:             2.2.0
- * Version description: Related Community Richtlijnen are selectable, no longer automatic. Requires plugin `ictuwp-plugin-richtlijn-taxonomie:1.3.0`.
+ * Version:             2.2.1
+ * Version description: Allow NULL for community_taxonomy_page.
  * Author:              David Hund
  * Author URI:          https://github.com/ICTU/ictuwp-plugin-community-taxonomie/
  * License:             GPL-3.0+
